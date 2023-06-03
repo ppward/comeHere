@@ -1,42 +1,196 @@
-import { View, Text ,Image,TouchableOpacity} from "react-native";
-import Icons from '../assets'
-import {Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+  ScrollView,
+} from "react-native";
+import Icons from "assets";
 
-const User = () => {
+const User = (props) => {
   return (
-    <View style={{flex:1}}>
-    <View style ={{flex:1.5,backgroundColor:'white',justifyContent:'center',alignItems:'center'}}>
-      <TouchableOpacity style={{marginLeft:'80%'}}>
-     <Image style={{ marginTop:10 ,marginBottom:20, width:30,height:30}} source =  {Icons.Setting}/>
-     </TouchableOpacity>
-     <Text style = {{backgroundColor:'plum', borderRadius:15,marginBottom:10,fontSize:20,color:'white'}}> 프로필 </Text>
-    <Image 
-    style ={{width:50,height:50}}
-     source = {Icons.USER}/> 
-    
-    </View>
-    <View style ={{flex:1, backgroundColor:'lightgray'}}>
-     <TouchableOpacity style ={{backgroundColor:'plum',width:100,height:30,justifyContent:'center', borderRadius:15,margin:10}}>
-     <Text style={{margin:15,color:'white',height:15}}>oo면 여행자</Text>
-     </TouchableOpacity>
-     <View style ={{flexDirection:'row', backgroundColor:'white',borderRadius:15,marginLeft:10,marginRight:'25%'}}>
-      <Image style={{width:30,height:30 ,margin:10,marginLeft:20}} source ={Icons.Badge}/>
-     </View>
-     
-    </View>
+    <View style={styles.container}>
+      <StatusBar style="auto" />
+      <ScrollView>
+        {/* 프로필 사진 뷰, styles1 */}
+        <View style={{ ...styles1.profilePicView }}>
+          {/* 환경설정 */}
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("Settings");
+            }}
+          >
+            <Image
+              style={{ ...styles.icon, marginLeft: "80%" }}
+              source={Icons.SETTING}
+            />
+          </TouchableOpacity>
+          {/* 프로필 사진, 닉네임, 닉네임 수정, 배지 */}
+          <View style={{ alignItems: "center" }}>
+            <Image style={styles1.profilePic} source={Icons.USER} />
+            <View style={styles.flexRowAndAlignCenter}>
+              <Image
+                style={{ ...styles.icon, marginRight: 10 }}
+                source={Icons.BADGE}
+              ></Image>
+              <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 10 }}>
+                닉네임
+              </Text>
+              <Image style={styles1.profilePicEdit} source={Icons.EDIT}></Image>
+            </View>
+          </View>
+        </View>
 
-    <View style ={{flex:2,backgroundColor:'white',justifyContent:'flex-start',alignItems:'flex-start'}}>
-    <Text style ={{margin:10,backgroundColor:'white',fontSize:25, fontWeight:'bold'}}>나의 활동 </Text>
-    <TouchableOpacity style={{borderColor:'grey'}}> 
-    <Text style ={{width:Dimensions.get('window').width,margin:10, borderColor:'grey',fontSize:15}}> 파티 참여내역</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={{borderColor:'grey'}}> 
-    <Text style ={{width:Dimensions.get('window').width,margin:10, borderColor:'grey',fontSize:15}}> 최근 댓글</Text>
-    </TouchableOpacity>
-    </View>
-    
-  </View>
+        {/* 활동 지역, 배지 확인 뷰, styles2 */}
+        <View style={{ flex: 1, backgroundColor: "lightgray" }}>
+          <TouchableOpacity style={styles2.location}>
+            <Text style={styles2.locationText}>oo면 여행자</Text>
+          </TouchableOpacity>
+          {/* 배지 확인 뷰 */}
+          <View style={styles2.badgeStyle}>
+            <Image
+              style={{ width: 30, height: 30, margin: 10, marginLeft: 20 }}
+              source={Icons.BADGE}
+            />
+            <View style={styles2.acquiredBadge}>
+              <Text style={styles2.acquiredBadgeText}>획득 배지 확인</Text>
+              <Image style={styles.icon} source={Icons.QUESTION}></Image>
+            </View>
+          </View>
+        </View>
 
+        {/* 나의 활동 뷰, styles3 */}
+        <View style={styles3.myActivity}>
+          <Text style={styles3.myActivityText}>나의 활동</Text>
+          {/* 파티 참여 내역 뷰 */}
+          <View style={styles3.activityView}>
+            <Text style={styles3.activityLogText}>파티 참여 내역</Text>
+            <Image
+              source={Icons.BRACE}
+              style={styles3.checkActivityIcon}
+            ></Image>
+          </View>
+          {/* 최근 댓글 뷰 */}
+          <View style={{ ...styles3.activityView, marginRight: -45 }}>
+            <Text style={styles3.activityLogText}> 최근 댓글</Text>
+            <Image
+              source={Icons.BRACE}
+              style={styles3.checkActivityIcon}
+            ></Image>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fffafa",
+    fontColor: "black",
+  },
+  flexDirectionRow: {
+    flexDirection: "row",
+  },
+  flexRowAndAlignCenter: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  icon: {
+    width: 30,
+    height: 30,
+  },
+});
+
+const styles1 = StyleSheet.create({
+  profilePicView: {
+    backgroundColor: "white",
+    alignItems: "center",
+  },
+  profilePic: {
+    width: 80,
+    height: 80,
+  },
+  profilePicEdit: {
+    marginLeft: 10,
+    marginBottom: 5,
+    width: 17,
+    height: 17,
+  },
+});
+
+const styles2 = StyleSheet.create({
+  location: {
+    backgroundColor: "plum",
+    width: 120,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+    margin: 10,
+  },
+  locationText: {
+    margin: 15,
+    color: "white",
+    height: 15,
+    fontSize: 15,
+  },
+  badgeStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 15,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 15,
+  },
+  acquiredBadge: {
+    marginLeft: 140,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  acquiredBadgeText: {
+    marginLeft: 30,
+    marginRight: 5,
+    fontSize: 17,
+  },
+});
+
+const styles3 = StyleSheet.create({
+  myActivity: {
+    backgroundColor: "white",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginTop: 10,
+  },
+  myActivityText: {
+    margin: 10,
+    backgroundColor: "white",
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  activityLogText: {
+    margin: 10,
+    borderColor: "grey",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  checkActivityIcon: {
+    width: 20,
+    height: 20,
+    marginLeft: "63%",
+  },
+  activityView: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: "1px",
+    borderColor: "lightgrey",
+    marginLeft: 5,
+    marginBottom: 10,
+  },
+});
+
 export default User;

@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Button, Text, Image } from "react-native";
+import { View, Button, Text, Image, StatusBar } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import LocationMaps from "./LocationMaps";
 import Ranking from "./Ranking";

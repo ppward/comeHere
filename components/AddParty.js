@@ -1,7 +1,8 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 
 const AddParty = () => {
   <View>
+    <StatusBar style="auto" />
     <Text>AddParty Screen</Text>
   </View>;
 };

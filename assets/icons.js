@@ -73,6 +73,12 @@ const icons = {
   ASTERISK: require("./asterisk.png"),
   CHAT: require("./chat.png"),
   START: require("./start.png"),
+  PLUS: require("./plus.png"),
+  SETTING: require("./settings.png"),
+  EDIT: require("./edit.png"),
+  BADGE: require("./crown.png"),
+  QUESTION: require("./question.png"),
+  BRACE: require("./brace.png"),
 };
 
 export default icons;

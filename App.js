@@ -6,6 +6,7 @@ import Ranking from "./components/Ranking";
 import TabBarIcon from "./components/TabBarIcon";
 import CurrentParty from "./components/CurrentParty";
 import AddParty from "./components/AddParty";
+import Settings from "./components/Settings";
 // import FirebaseTest from "./components/FirebaseTest";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
@@ -19,11 +20,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="main"
+          name=" "
           component={MainScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen name="AddParty" component={AddParty} />
+        <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,8 +1,16 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  StatusBar,
+} from "react-native";
 import { useState, useEffect } from "react";
 import MapView from "react-native-maps"; //지도호출하는
 import { PROVIDER_GOOGLE } from "react-native-maps"; //구글 지도로 변환하는 PROVIDER
 import * as Location from "expo-location";
+import Icons from "assets";
 
 const setUserLocation = (lat, long) => {
   //사용자의 위치를 저장(json 키로 변경하는 함수)
@@ -75,6 +83,7 @@ const LocationMaps = (props) => {
   let locate = GetLocation(); //위의 위치정보 받아오는 함수 선언
   return (
     <View style={styles.container}>
+      <StatusBar style="auto" />
       <MapView
         provider={PROVIDER_GOOGLE} //지도를 구글지도로 변경
         style={styles.map} //스타일 맵으로 변경
@@ -99,12 +108,13 @@ const LocationMaps = (props) => {
           }}
           style={styles.button}
         >
-          <Text>+</Text>
+          <Image source={Icons.PLUS} style={styles.icon}></Image>
         </TouchableOpacity>
       </MapView>
     </View>
   );
 };
+
 export default LocationMaps; //export
 
 const styles = StyleSheet.create({
@@ -117,13 +127,22 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   button: {
-    width: 100,
-    height: 60,
-    marginTop: 10,
-    marginLeft: "15%",
+    width: 50,
+    height: 50,
+    marginTop: "155%",
+    marginLeft: "3%",
     padding: 10,
     borderRadius: 25,
     alignItems: "center",
-    backgroundColor: "skyblue",
+    lineHeight: 3,
+    borderWidth: "0.5px",
+    backgroundColor: "white",
+    justifyContent: "space-between",
+  },
+  icon: {
+    marginTop: "2080%",
+    marginLeft: "82%",
+    width: 32,
+    height: 32,
   },
 });

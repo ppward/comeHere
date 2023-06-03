@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { View, Text, FlatList, SafeAreaView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
 
 /**
  * @FlatList 사용 출처
@@ -9,6 +16,7 @@ import { View, Text, FlatList, SafeAreaView, StyleSheet } from "react-native";
 const renderItem = () => {
   return (
     <View style={styles.renderItem}>
+      <StatusBar style="auto" />
       <View>
         <Text>{"ranking"}</Text>
       </View>
@@ -49,6 +57,7 @@ const Ranking = () => {
 
   return (
     <SafeAreaView>
+      <StatusBar style="auto" />
       <View style={styles.userRankingInfo}>
         <Text style={styles.topFont}>등수</Text>
         <Text style={styles.topFont}>닉네임</Text>
