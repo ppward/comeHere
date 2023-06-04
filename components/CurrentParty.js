@@ -16,13 +16,13 @@ const maxCount = "30";
 const headCount = `${curCount}/${maxCount}`;
 
 const Description = () => {
-  const [partyDesc, setPartyDesc] = useState("ㅇㅇㅇ");
+  const [partyDesc, setPartyDesc] = useState("party description", []);
   return (
     <Text
       style={{
-        paddingRight: "100%",
-        paddingBottom: "50%",
-        backgroundColor: "blue",
+        marginLeft: 10,
+        marginTop: 10,
+        marginRight: 10,
       }}
     >
       {partyDesc}
@@ -63,13 +63,7 @@ const CurrentParty = () => {
             </View>
             {/* 파티 설명 뷰, 바깥 뷰는 border 목적 */}
             <View>
-              <View
-                style={{
-                  padding: 10,
-                  borderWidth: 0.3,
-                  borderColor: "skyblue",
-                }}
-              >
+              <View style={{ paddingBottom: 150 }}>
                 <Description />
               </View>
             </View>

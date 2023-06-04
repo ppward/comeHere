@@ -1,10 +1,5 @@
 import { StyleSheet, Image } from "react-native";
-import LocationMaps from "./components/LocationMaps";
 import MainScreen from "./components/MainScreen";
-import User from "./components/User";
-import Ranking from "./components/Ranking";
-import TabBarIcon from "./components/TabBarIcon";
-import CurrentParty from "./components/CurrentParty";
 import AddParty from "./components/AddParty";
 import Settings from "./components/AfterUser/Settings";
 import Auth from "./components/Auth";
@@ -14,7 +9,6 @@ import PartyLog from "./components/AfterUser/PartyLog";
 import CommentLog from "./components/AfterUser/CommentLog";
 import app from "./firebase";
 import Icons from "./assets/icons";
-// import FirebaseTest from "./components/FirebaseTest";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";

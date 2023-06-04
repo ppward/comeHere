@@ -140,8 +140,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   icon: {
-    marginTop: "2080%",
-    marginLeft: "82%",
     width: 32,
     height: 32,
   },

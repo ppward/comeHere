@@ -6,9 +6,48 @@ import {
   StyleSheet,
   StatusBar,
   ScrollView,
+  Modal,
+  Alert,
+  Pressable,
 } from "react-native";
 import Icons from "assets";
 import Modal_BadgeLog from "./AfterUser/Modal_BadgeLog";
+import { useState } from "react";
+
+const Modal_BadgeLogf = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  return (
+    <View style={styles4.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles4.centeredView}>
+          <View style={styles4.modalView}>
+            <Text style={styles4.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles4.button, styles4.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles4.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles4.button, styles4.buttonOpen]}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles4.textStyle}>Show Modal</Text>
+      </Pressable>
+    </View>
+  );
+};
 
 const User = (props) => {
   return (
@@ -61,7 +100,9 @@ const User = (props) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  <Modal_BadgeLog />;
+                  console.log("modal area pressed");
+                  // Modal_BadgeLogf();
+                  <Modal_BadgeLog></Modal_BadgeLog>;
                 }}
               >
                 <View style={styles2.acquiredBadge}>
@@ -225,6 +266,50 @@ const styles3 = StyleSheet.create({
     borderColor: "lightgrey",
     marginLeft: 5,
     marginBottom: 10,
+  },
+});
+
+const styles4 = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 
