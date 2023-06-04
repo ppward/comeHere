@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import Icons from "assets";
+import Modal_BadgeLog from "./AfterUser/Modal_BadgeLog";
 
 const User = (props) => {
   return (
@@ -54,9 +55,20 @@ const User = (props) => {
               style={{ width: 30, height: 30, margin: 10, marginLeft: 20 }}
               source={Icons.BADGE}
             />
-            <View style={styles2.acquiredBadge}>
-              <Text style={styles2.acquiredBadgeText}>획득 배지 확인</Text>
-              <Image style={styles.icon} source={Icons.QUESTION}></Image>
+
+            {/* 획득 배지 확인 뷰 */}
+
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  <Modal_BadgeLog />;
+                }}
+              >
+                <View style={styles2.acquiredBadge}>
+                  <Text style={styles2.acquiredBadgeText}>획득 배지 확인</Text>
+                  <Image style={styles.icon} source={Icons.QUESTION}></Image>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -65,20 +77,43 @@ const User = (props) => {
         <View style={styles3.myActivity}>
           <Text style={styles3.myActivityText}>나의 활동</Text>
           {/* 파티 참여 내역 뷰 */}
-          <View style={styles3.activityView}>
-            <Text style={styles3.activityLogText}>파티 참여 내역</Text>
-            <Image
-              source={Icons.BRACE}
-              style={styles3.checkActivityIcon}
-            ></Image>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate("PartyLog");
+              }}
+            >
+              <View style={styles3.activityView}>
+                <Text style={styles3.activityLogText}>파티 참여 내역</Text>
+                <Image
+                  source={Icons.BRACE}
+                  style={styles3.checkActivityIcon}
+                ></Image>
+              </View>
+            </TouchableOpacity>
           </View>
           {/* 최근 댓글 뷰 */}
-          <View style={{ ...styles3.activityView, marginRight: -45 }}>
-            <Text style={styles3.activityLogText}> 최근 댓글</Text>
-            <Image
-              source={Icons.BRACE}
-              style={styles3.checkActivityIcon}
-            ></Image>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate("CommentLog");
+              }}
+            >
+              <View style={{ ...styles3.activityView, marginRight: -45 }}>
+                <Text
+                  style={{ ...styles3.activityLogText, marginRight: "70%" }}
+                >
+                  최근 댓글
+                </Text>
+                <Image
+                  source={Icons.BRACE}
+                  style={{
+                    width: 20,
+                    height: 20,
+                  }}
+                ></Image>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

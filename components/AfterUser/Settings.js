@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Icons from "assets";
 import React, { useState } from "react";
-const Settings = () => {
+const Settings = (props) => {
   const [isEnabled, setIsEnabled] = useState(true);
   const [isEnabled1, setIsEnabled1] = useState(true);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
@@ -53,15 +53,31 @@ const Settings = () => {
         </View>
 
         {/* 앱 가이드라인 뷰 */}
-        <View style={styles.settingView}>
-          <Text style={styles.settingViewText}>앱 가이드라인</Text>
-          <Image source={Icons.BRACE} style={styles.checkIcon}></Image>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("AppGuide");
+            }}
+          >
+            <View style={styles.settingView}>
+              <Text style={styles.settingViewText}>앱 가이드라인</Text>
+              <Image source={Icons.BRACE} style={styles.checkIcon}></Image>
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* 약관 및 정책 뷰 */}
-        <View style={styles.settingView}>
-          <Text style={styles.settingViewText}>약관 및 정책</Text>
-          <Image source={Icons.BRACE} style={styles.checkIcon}></Image>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("AppPolicy");
+            }}
+          >
+            <View style={styles.settingView}>
+              <Text style={styles.settingViewText}>약관 및 정책</Text>
+              <Image source={Icons.BRACE} style={styles.checkIcon}></Image>
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* 버전 뷰 */}

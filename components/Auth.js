@@ -1,9 +1,42 @@
+import { initializeApp } from "firebase/app";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { useEffect, useState } from "react";
 import React from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 
-export default function App() {
-  const [username, setUsername] = React.useState("");
+const Auth = (props) => {
+  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [isSingUp, setIsSignUp] = React.useState(true);
+  const [isLoggedin, setIsLoggedin] = React.useState(false);
+  const auth = getAuth();
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log(user);
+      if (user) {
+        setIsLoggedin(true);
+      } else {
+        setIsLoggedin(false);
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  const signUp = async () => {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    console.log(result);
+  };
+  const signIn = async () => {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    if (result != null) {
+      props.navigation.navigate("MainScreen");
+    }
+  };
 
   const handleLogin = () => {
     // 로그인 버튼을 눌렀을 때의 동작을 구현합니다.
@@ -14,13 +47,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>로그인</Text>
       <View style={styles.form}>
         <TextInput
           style={styles.input}
           placeholder="사용자명"
-          value={username}
-          onChangeText={setUsername}
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           style={styles.input}
@@ -29,12 +61,12 @@ export default function App() {
           value={password}
           onChangeText={setPassword}
         />
-        <Button title="로그인" onPress={handleLogin} />
+        <Button title="로그인" onPress={signIn} />
+        <Button title="회원가입" onPress={signUp} />
       </View>
     </View>
   );
-}
-
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -58,3 +90,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
+
+export default Auth;
