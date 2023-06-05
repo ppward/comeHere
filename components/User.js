@@ -12,51 +12,273 @@ import {
   Dimensions,
   PanResponder,
   TouchableWithoutFeedback,
+  Button,
+  TextInput,
 } from "react-native";
 import Icons from "assets";
 import { useState, useEffect, useRef } from "react";
 
 const User = (props) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const screenHeight = Dimensions.get("screen").height;
-  const panY = useRef(new Animated.Value(screenHeight)).current;
-  const translateY = panY.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: [-1, 0, 1],
-  });
-  const resetBottomSheet = Animated.timing(panY, {
-    toValue: 0,
-    duration: 300,
-    useNativeDriver: true,
-  });
-  const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight,
-    duration: 300,
-    useNativeDriver: true,
-  });
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) =>
-        panY.setValue(gestureState.dy),
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > 0 && gestureState.vy > 1.5) {
-          closeModal();
-        } else {
-          resetBottomSheet.start();
-        }
+  function badgeModal() {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const screenHeight = Dimensions.get("screen").height;
+    const panY = useRef(new Animated.Value(screenHeight)).current;
+    const translateY = panY.interpolate({
+      inputRange: [-1, 0, 1],
+      outputRange: [-1, 0, 1],
+    });
+    const resetBottomSheet = Animated.timing(panY, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    const closeBottomSheet = Animated.timing(panY, {
+      toValue: screenHeight,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    const panResponder = useRef(
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (event, gestureState) =>
+          panY.setValue(gestureState.dy),
+        onPanResponderRelease: (event, gestureState) => {
+          if (gestureState.dy > 0 && gestureState.vy > 1.5) {
+            closeModal();
+          } else {
+            resetBottomSheet.start();
+          }
+        },
+      })
+    ).current;
+    const closeModal = () => {
+      closeBottomSheet.start(() => setIsModalVisible(false));
+    };
+    useEffect(() => {
+      if (isModalVisible) {
+        resetBottomSheet.start();
+      }
+    }, [isModalVisible]);
+    const modalStyle = StyleSheet.create({
+      flexible: {
+        flex: 1,
+      }, // flex 속성 지정
+      alignContentsCenter: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }, // 가로세로 중앙정렬
+      modalOverlay: {
+        flex: 1,
+        justifyContent: "flex-end",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+      }, // 모달이 띄워졌을 때 화면을 어둡게 하기 위한 오버레이
+      bottomSheetContainer: {
+        height: 300,
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
+        padding: 20,
+      }, // 모달 스타일
+    });
+    const modalInnerStyle = StyleSheet.create({
+      badgeLogTitle: {
+        fontSize: 22,
+        fontWeight: "700",
+        paddingBottom: 10,
       },
-    })
-  ).current;
-  const closeModal = () => {
-    closeBottomSheet.start(() => setIsModalVisible(false));
-  };
-  useEffect(() => {
-    if (isModalVisible) {
-      resetBottomSheet.start();
-    }
-  }, [isModalVisible]);
+      introductionText: {
+        color: "#f00",
+        textAlign: "center",
+        fontSize: 16,
+      },
+    });
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            setIsModalVisible(isModalVisible == false);
+          }}
+        >
+          <View style={styles2.acquiredBadge}>
+            <Text style={styles2.acquiredBadgeText}>획득 배지 확인</Text>
+            <Image style={styles.icon} source={Icons.QUESTION}></Image>
+          </View>
+        </TouchableOpacity>
+        {/* 모달 */}
+        <Modal
+          visible={isModalVisible}
+          animationType={"slide"}
+          transparent={true}
+          statusBarTranslucent={true}
+        >
+          <Pressable
+            style={modalStyle.modalOverlay}
+            onPress={() => setIsModalVisible(isModalVisible == false)}
+          >
+            <TouchableWithoutFeedback>
+              <Animated.View
+                style={{
+                  ...modalStyle.bottomSheetContainer,
+                  transform: [{ translateY: translateY }],
+                }}
+                {...panResponder.panHandlers}
+              >
+                {/* 모달에 들어갈 내용을 아래에 작성 */}
+                <View style={{ alignItems: "stretch" }}>
+                  <Text style={modalInnerStyle.badgeLogTitle}>획득한 배지</Text>
+                  <View style={{ paddingBottom: 150 }}>
+                    <Image style={styles.icon} source={Icons.BADGE}></Image>
+                  </View>
+                  <Text style={modalInnerStyle.introductionText}>
+                    아무 곳이나 클릭하면 나가집니다.
+                  </Text>
+                </View>
+              </Animated.View>
+            </TouchableWithoutFeedback>
+          </Pressable>
+        </Modal>
+      </View>
+    );
+  }
+  function modifyName() {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const screenHeight = Dimensions.get("screen").height;
+    const panY = useRef(new Animated.Value(screenHeight)).current;
+    const translateY = panY.interpolate({
+      inputRange: [-1, 0, 1],
+      outputRange: [-1, 0, 1],
+    });
+    const resetBottomSheet = Animated.timing(panY, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    const closeBottomSheet = Animated.timing(panY, {
+      toValue: screenHeight,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    const panResponder = useRef(
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (event, gestureState) =>
+          panY.setValue(gestureState.dy),
+        onPanResponderRelease: (event, gestureState) => {
+          if (gestureState.dy > 0 && gestureState.vy > 1.5) {
+            closeModal();
+          } else {
+            resetBottomSheet.start();
+          }
+        },
+      })
+    ).current;
+    const closeModal = () => {
+      closeBottomSheet.start(() => setIsModalVisible(false));
+    };
+    useEffect(() => {
+      if (isModalVisible) {
+        resetBottomSheet.start();
+      }
+    }, [isModalVisible]);
+    const modalStyle = StyleSheet.create({
+      flexible: {
+        flex: 1,
+      }, // flex 속성 지정
+      alignContentsCenter: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }, // 가로세로 중앙정렬
+      modalOverlay: {
+        flex: 1,
+        justifyContent: "flex-end",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+      }, // 모달이 띄워졌을 때 화면을 어둡게 하기 위한 오버레이
+      bottomSheetContainer: {
+        height: 300,
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
+        padding: 20,
+      }, // 모달 스타일
+    });
+    const modalInnerStyle = StyleSheet.create({
+      badgeLogTitle: {
+        fontSize: 22,
+        fontWeight: "700",
+        paddingBottom: 10,
+      },
+      introductionText: {
+        color: "#f00",
+        textAlign: "center",
+        fontSize: 16,
+      },
+    });
+    const textInput = StyleSheet.create({
+      marginTop: 20,
+      marginBottom: 10,
+      paddingHorizontal: 10,
+      height: 40,
+      borderRadius: 10,
+      borderColor: "gray",
+      borderWidth: 1,
+    });
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            setIsModalVisible(isModalVisible == false);
+          }}
+        >
+          <Image style={styles1.profilePicEdit} source={Icons.EDIT}></Image>
+        </TouchableOpacity>
+        <Modal
+          visible={isModalVisible}
+          animationType={"slide"}
+          transparent={true}
+          statusBarTranslucent={true}
+        >
+          <Pressable
+            style={modalStyle.modalOverlay}
+            onPress={() => setIsModalVisible(isModalVisible == false)}
+          >
+            <TouchableWithoutFeedback>
+              <Animated.View
+                style={{
+                  ...modalStyle.bottomSheetContainer,
+                  transform: [{ translateY: translateY }],
+                }}
+                {...panResponder.panHandlers}
+              >
+                {/* 모달에 들어갈 내용을 아래에 작성 */}
+                <View style={{}}>
+                  <Text style={modalInnerStyle.badgeLogTitle}>닉네임 수정</Text>
+                  <TextInput
+                    style={textInput}
+                    placeholder="수정할 닉네임을 입력해주세요."
+                  ></TextInput>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      // justifyContent: "center",
+                      marginRight: "50%",
+                      marginTop: "20%",
+                    }}
+                  >
+                    <Button title="확인"></Button>
+                    <Button title="취소"></Button>
+                  </View>
+                </View>
+              </Animated.View>
+            </TouchableWithoutFeedback>
+          </Pressable>
+        </Modal>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -87,16 +309,7 @@ const User = (props) => {
                 닉네임
               </Text>
               {/* 닉네임 수정 */}
-              <TouchableOpacity
-                onPress={() => {
-                  // badge.setIsModalVisible(!isModalVisible);
-                }}
-              >
-                <Image
-                  style={styles1.profilePicEdit}
-                  source={Icons.EDIT}
-                ></Image>
-              </TouchableOpacity>
+              {modifyName()}
             </View>
           </View>
         </View>
@@ -115,56 +328,7 @@ const User = (props) => {
               source={Icons.BADGE}
             />
             {/* 획득 배지 확인 뷰 */}
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsModalVisible(isModalVisible == false);
-                }}
-              >
-                <View style={styles2.acquiredBadge}>
-                  <Text style={styles2.acquiredBadgeText}>획득 배지 확인</Text>
-                  <Image style={styles.icon} source={Icons.QUESTION}></Image>
-                </View>
-              </TouchableOpacity>
-              {/* 모달 */}
-              <Modal
-                visible={isModalVisible}
-                animationType={"slide"}
-                transparent={true}
-                statusBarTranslucent={true}
-              >
-                <Pressable
-                  style={modalStyle.modalOverlay}
-                  onPress={() => setIsModalVisible(isModalVisible == false)}
-                >
-                  <TouchableWithoutFeedback>
-                    <Animated.View
-                      style={{
-                        ...modalStyle.bottomSheetContainer,
-                        transform: [{ translateY: translateY }],
-                      }}
-                      {...panResponder.panHandler}
-                    >
-                      {/* 모달에 들어갈 내용을 아래에 작성 */}
-                      <View style={{ alignItems: "stretch" }}>
-                        <Text style={modalInnerStyle.badgeLogTitle}>
-                          획득한 배지
-                        </Text>
-                        <View style={{ paddingBottom: 150 }}>
-                          <Image
-                            style={styles.icon}
-                            source={Icons.BADGE}
-                          ></Image>
-                        </View>
-                        <Text style={modalInnerStyle.introductionText}>
-                          아무 곳이나 클릭하면 나가집니다.
-                        </Text>
-                      </View>
-                    </Animated.View>
-                  </TouchableWithoutFeedback>
-                </Pressable>
-              </Modal>
-            </View>
+            {badgeModal()}
           </View>
         </View>
 
@@ -232,42 +396,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
-  },
-});
-
-const modalStyle = StyleSheet.create({
-  flexible: {
-    flex: 1,
-  }, // flex 속성 지정
-  alignContentsCenter: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  }, // 가로세로 중앙정렬
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-  }, // 모달이 띄워졌을 때 화면을 어둡게 하기 위한 오버레이
-  bottomSheetContainer: {
-    height: 300,
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 7,
-    borderTopRightRadius: 7,
-    padding: 20,
-  }, // 모달 스타일
-});
-
-const modalInnerStyle = StyleSheet.create({
-  badgeLogTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    paddingBottom: 10,
-  },
-  introductionText: {
-    color: "#f00",
-    textAlign: "center",
-    fontSize: 16,
   },
 });
 
