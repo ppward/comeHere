@@ -7,55 +7,63 @@ import {
   StatusBar,
   ScrollView,
   Modal,
-  Alert,
   Pressable,
+  Animated,
+  Dimensions,
+  PanResponder,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Icons from "assets";
-import Modal_BadgeLog from "./AfterUser/Modal_BadgeLog";
-import { useState } from "react";
-
-const Modal_BadgeLogf = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  return (
-    <View style={styles4.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles4.centeredView}>
-          <View style={styles4.modalView}>
-            <Text style={styles4.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles4.button, styles4.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles4.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-      <Pressable
-        style={[styles4.button, styles4.buttonOpen]}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles4.textStyle}>Show Modal</Text>
-      </Pressable>
-    </View>
-  );
-};
+import { useState, useEffect, useRef } from "react";
 
 const User = (props) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const screenHeight = Dimensions.get("screen").height;
+  const panY = useRef(new Animated.Value(screenHeight)).current;
+  const translateY = panY.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: [-1, 0, 1],
+  });
+  const resetBottomSheet = Animated.timing(panY, {
+    toValue: 0,
+    duration: 300,
+    useNativeDriver: true,
+  });
+  const closeBottomSheet = Animated.timing(panY, {
+    toValue: screenHeight,
+    duration: 300,
+    useNativeDriver: true,
+  });
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (event, gestureState) =>
+        panY.setValue(gestureState.dy),
+      onPanResponderRelease: (event, gestureState) => {
+        if (gestureState.dy > 0 && gestureState.vy > 1.5) {
+          closeModal();
+        } else {
+          resetBottomSheet.start();
+        }
+      },
+    })
+  ).current;
+  const closeModal = () => {
+    closeBottomSheet.start(() => setIsModalVisible(false));
+  };
+  useEffect(() => {
+    if (isModalVisible) {
+      resetBottomSheet.start();
+    }
+  }, [isModalVisible]);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <ScrollView>
         {/* 프로필 사진 뷰, styles1 */}
-        <View style={{ ...styles1.profilePicView }}>
+        <View style={styles1.profilePicView}>
           {/* 환경설정 */}
           <TouchableOpacity
             onPress={() => {
@@ -78,14 +86,26 @@ const User = (props) => {
               <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 10 }}>
                 닉네임
               </Text>
-              <Image style={styles1.profilePicEdit} source={Icons.EDIT}></Image>
+              {/* 닉네임 수정 */}
+              <TouchableOpacity
+                onPress={() => {
+                  // badge.setIsModalVisible(!isModalVisible);
+                }}
+              >
+                <Image
+                  style={styles1.profilePicEdit}
+                  source={Icons.EDIT}
+                ></Image>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
         {/* 활동 지역, 배지 확인 뷰, styles2 */}
         <View style={{ flex: 1, backgroundColor: "lightgray" }}>
-          <TouchableOpacity style={styles2.location}>
+          <TouchableOpacity
+            style={{ ...styles2.location, flexDirection: "row" }}
+          >
             <Text style={styles2.locationText}>oo면 여행자</Text>
           </TouchableOpacity>
           {/* 배지 확인 뷰 */}
@@ -94,15 +114,11 @@ const User = (props) => {
               style={{ width: 30, height: 30, margin: 10, marginLeft: 20 }}
               source={Icons.BADGE}
             />
-
             {/* 획득 배지 확인 뷰 */}
-
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  console.log("modal area pressed");
-                  // Modal_BadgeLogf();
-                  <Modal_BadgeLog></Modal_BadgeLog>;
+                  setIsModalVisible(isModalVisible == false);
                 }}
               >
                 <View style={styles2.acquiredBadge}>
@@ -110,6 +126,44 @@ const User = (props) => {
                   <Image style={styles.icon} source={Icons.QUESTION}></Image>
                 </View>
               </TouchableOpacity>
+              {/* 모달 */}
+              <Modal
+                visible={isModalVisible}
+                animationType={"slide"}
+                transparent={true}
+                statusBarTranslucent={true}
+              >
+                <Pressable
+                  style={modalStyle.modalOverlay}
+                  onPress={() => setIsModalVisible(isModalVisible == false)}
+                >
+                  <TouchableWithoutFeedback>
+                    <Animated.View
+                      style={{
+                        ...modalStyle.bottomSheetContainer,
+                        transform: [{ translateY: translateY }],
+                      }}
+                      {...panResponder.panHandler}
+                    >
+                      {/* 모달에 들어갈 내용을 아래에 작성 */}
+                      <View style={{ alignItems: "stretch" }}>
+                        <Text style={modalInnerStyle.badgeLogTitle}>
+                          획득한 배지
+                        </Text>
+                        <View style={{ paddingBottom: 150 }}>
+                          <Image
+                            style={styles.icon}
+                            source={Icons.BADGE}
+                          ></Image>
+                        </View>
+                        <Text style={modalInnerStyle.introductionText}>
+                          아무 곳이나 클릭하면 나가집니다.
+                        </Text>
+                      </View>
+                    </Animated.View>
+                  </TouchableWithoutFeedback>
+                </Pressable>
+              </Modal>
             </View>
           </View>
         </View>
@@ -178,6 +232,42 @@ const styles = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
+  },
+});
+
+const modalStyle = StyleSheet.create({
+  flexible: {
+    flex: 1,
+  }, // flex 속성 지정
+  alignContentsCenter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  }, // 가로세로 중앙정렬
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+  }, // 모달이 띄워졌을 때 화면을 어둡게 하기 위한 오버레이
+  bottomSheetContainer: {
+    height: 300,
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 7,
+    borderTopRightRadius: 7,
+    padding: 20,
+  }, // 모달 스타일
+});
+
+const modalInnerStyle = StyleSheet.create({
+  badgeLogTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    paddingBottom: 10,
+  },
+  introductionText: {
+    color: "#f00",
+    textAlign: "center",
+    fontSize: 16,
   },
 });
 
