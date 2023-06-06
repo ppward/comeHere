@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   Image,
+  TextInput,
   StatusBar,
 } from "react-native";
 import { useState, useEffect } from "react";
@@ -24,32 +25,11 @@ const setUserLocation = (lat, long) => {
     },
   };
 };
-
-const RenderScreen = (lat, long, props) => {
-  // 지도화면을 구성하는 함수
-
-  return (
-    <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE} //지도를 구글지도로 변경
-        style={styles.map} //스타일 맵으로 변경
-        region={{
-          //화면에 표시되는 위치정보
-          latitude: lat,
-          longitude: long,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        showsMyLocationButton={true} //현재 위치로 이동하는 버튼
-        onUserLocationChange={setUserLocation(lat, long)} // showMyLocationButton을 눌렀을 때 이동하는 이벤트핸들러
-        followsUserLocation={true} // 애플지도에서 작동하는 화면을 현재위치 정보로 이동하게 하는 기능을 함 *구글에서는 동작하지 않기 때문에 쓸모없다.
-        showsUserLocation={true} // 현재 사용자의 위치를 보여주는 아이콘(파란색 점)
-        showsCompass={true} //잘모르겠음
-        chacheEnabled={false} // 잘모르겠음
-        zoomEnabled={true} //줌 가능여부 같음
-      ></MapView>
-    </View>
-  );
+const defaultRegion = {
+  latitude: 36.7997761,
+  longitude: 127.0748502,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
 };
 
 const GetLocation = () => {
@@ -81,27 +61,100 @@ const GetLocation = () => {
 const LocationMaps = (props) => {
   //컴포넌트의 메인 리턴
   let locate = GetLocation(); //위의 위치정보 받아오는 함수 선언
+  const [query, setQuery] = useState("");
+  const [predictions, setPredictions] = useState([]);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+
+  const handleQueryChange = async (value) => {
+    setQuery(value);
+
+    try {
+      const encodedValue = encodeURIComponent(value);
+      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodedValue}&key=${API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.predictions) {
+        const topPredictions = data.predictions.slice(0, 4);
+        setPredictions(topPredictions);
+      } else {
+        setPredictions([]);
+      }
+    } catch (error) {
+      setPredictions([]);
+    }
+  };
+
+  const handlePredictionPress = async (prediction) => {
+    setSelectedPlace(prediction);
+
+    try {
+      const placeDetailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction.place_id}&key=${API_KEY}`;
+      const placeDetailsResponse = await fetch(placeDetailsUrl);
+      const placeDetailsData = await placeDetailsResponse.json();
+
+      const result = placeDetailsData.result;
+      const lat = result.geometry.location.lat;
+      const lng = result.geometry.location.lng;
+
+      setQuery(`${result.formatted_address}${result.name}`);
+      setSelectedPlace({ ...prediction, lat, lng });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMapViewRegion = () => {
+    if (selectedPlace && selectedPlace.lat && selectedPlace.lng) {
+      return {
+        latitude: selectedPlace.lat,
+        longitude: selectedPlace.lng,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      };
+    }
+    return defaultRegion;
+  };
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
       <MapView
-        provider={PROVIDER_GOOGLE} //지도를 구글지도로 변경
-        style={styles.map} //스타일 맵으로 변경
-        region={{
-          //화면에 표시되는 위치정보
-          latitude: locate[0],
-          longitude: locate[1],
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        showsMyLocationButton={true} //현재 위치로 이동하는 버튼
-        onUserLocationChange={setUserLocation(locate[0], locate[1])} // showMyLocationButton을 눌렀을 때 이동하는 이벤트핸들러
-        followsUserLocation={true} // 애플지도에서 작동하는 화면을 현재위치 정보로 이동하게 하는 기능을 함 *구글에서는 동작하지 않기 때문에 쓸모없다.
-        showsUserLocation={true} // 현재 사용자의 위치를 보여주는 아이콘(파란색 점)
-        showsCompass={true} //잘모르겠음
-        chacheEnabled={false} // 잘모르겠음
-        zoomEnabled={true} //줌 가능여부 같음
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        region={getMapViewRegion()}
+        showsMyLocationButton={true}
+        onUserLocationChange={setUserLocation(locate[0], locate[1])}
+        showsUserLocation={true}
       >
+        {selectedPlace && selectedPlace.lat && selectedPlace.lng && (
+          <Marker
+            coordinate={{
+              latitude: selectedPlace.lat,
+              longitude: selectedPlace.lng,
+            }}
+            title={selectedPlace.description}
+          />
+        )}
+      </MapView>
+      <View style={{ ...styles.inputContainer }}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter a location"
+          value={query}
+          onChangeText={handleQueryChange}
+        />
+        <View style={styles.predictionsContainer}>
+          {predictions.map((prediction) => (
+            <Text
+              key={prediction.place_id}
+              style={styles.predictionText}
+              onPress={() => handlePredictionPress(prediction)}
+            >
+              {prediction.description}
+            </Text>
+          ))}
+        </View>
+      </View>
+      <View style={{ position: "absolute", top: "75%", left: 10 }}>
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate("AddParty");
@@ -110,7 +163,7 @@ const LocationMaps = (props) => {
         >
           <Image source={Icons.PLUS} style={styles.icon}></Image>
         </TouchableOpacity>
-      </MapView>
+      </View>
     </View>
   );
 };
@@ -123,8 +176,31 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+  },
+  inputContainer: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: "white",
+    borderRadius: 5,
+    elevation: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  predictionsContainer: {
+    maxHeight: 120,
+    overflow: "scroll",
+  },
+  predictionText: {
+    paddingVertical: 5,
   },
   button: {
     width: 50,
@@ -142,7 +218,5 @@ const styles = StyleSheet.create({
   icon: {
     width: 32,
     height: 32,
-    marginTop: 603,
-    marginLeft: 23,
   },
 });

@@ -19,6 +19,7 @@ import Icons from "assets";
 import { useState, useEffect, useRef } from "react";
 
 const User = (props) => {
+  const [nickname, setNickname] = useState("");
   function badgeModal() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const screenHeight = Dimensions.get("screen").height;
@@ -109,7 +110,7 @@ const User = (props) => {
         {/* 모달 */}
         <Modal
           visible={isModalVisible}
-          animationType={"slide"}
+          animationType={"fade"}
           transparent={true}
           statusBarTranslucent={true}
         >
@@ -142,7 +143,7 @@ const User = (props) => {
       </View>
     );
   }
-  function modifyName() {
+  function modifyName(newNickname) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const screenHeight = Dimensions.get("screen").height;
     const panY = useRef(new Animated.Value(screenHeight)).current;
@@ -206,7 +207,7 @@ const User = (props) => {
       }, // 모달 스타일
     });
     const modalInnerStyle = StyleSheet.create({
-      badgeLogTitle: {
+      modifyName: {
         fontSize: 22,
         fontWeight: "700",
         paddingBottom: 10,
@@ -226,6 +227,7 @@ const User = (props) => {
       borderColor: "gray",
       borderWidth: 1,
     });
+
     return (
       <View>
         <TouchableOpacity
@@ -237,7 +239,7 @@ const User = (props) => {
         </TouchableOpacity>
         <Modal
           visible={isModalVisible}
-          animationType={"slide"}
+          animationType={"fade"}
           transparent={true}
           statusBarTranslucent={true}
         >
@@ -255,21 +257,37 @@ const User = (props) => {
               >
                 {/* 모달에 들어갈 내용을 아래에 작성 */}
                 <View style={{}}>
-                  <Text style={modalInnerStyle.badgeLogTitle}>닉네임 수정</Text>
+                  <Text style={modalInnerStyle.modifyName}>닉네임 수정</Text>
                   <TextInput
                     style={textInput}
+                    title={"ModifyNickname"}
                     placeholder="수정할 닉네임을 입력해주세요."
+                    placeholderTextColor={"blue"}
+                    returnKeyType="next"
+                    value={nickname}
+                    onChangeText={(text) => setNickname(text)}
                   ></TextInput>
                   <View
                     style={{
                       flexDirection: "row",
-                      // justifyContent: "center",
                       marginRight: "50%",
                       marginTop: "20%",
                     }}
                   >
-                    <Button title="확인"></Button>
-                    <Button title="취소"></Button>
+                    <Button
+                      onPress={() => {
+                        setNickname(nickname);
+                        setIsModalVisible(isModalVisible == false);
+                      }}
+                      title="확인"
+                    ></Button>
+                    <Button
+                      onPress={() => {
+                        setNickname("");
+                        setIsModalVisible(isModalVisible == false);
+                      }}
+                      title="취소"
+                    ></Button>
                   </View>
                 </View>
               </Animated.View>
@@ -279,7 +297,6 @@ const User = (props) => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -305,9 +322,7 @@ const User = (props) => {
                 style={{ ...styles.icon, marginRight: 10 }}
                 source={Icons.BADGE}
               ></Image>
-              <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 10 }}>
-                닉네임
-              </Text>
+              <Text>{nickname}</Text>
               {/* 닉네임 수정 */}
               {modifyName()}
             </View>
