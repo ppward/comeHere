@@ -11,7 +11,6 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import BTN from "../customBtn";
 import Icons from "assets";
 import * as Location from "expo-location";
 import { useState, useEffect } from "react";
@@ -148,14 +147,16 @@ const AddParty = (props) => {
           )}
         </MapView>
       </View>
-      {/* 다음 버튼 뷰 */}
+      {/* 다음 버튼 뷰, styles3 */}
       <View style={{ flex: 0.5, alignItems: "center", paddingTop: 30 }}>
-        {/* customBtn 사용 */}
-        <BTN
-          onPrees={() => {
+        <TouchableOpacity
+          style={styles3.ToStyle}
+          onPress={() => {
             props.navigation.navigate("DefineParty");
           }}
-        />
+        >
+          <Text style={styles3.ToTextStyle}>다음</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -194,6 +195,21 @@ const styles1 = StyleSheet.create({
 
 const styles2 = StyleSheet.create({
   justifyContent: "row",
+});
+
+const styles3 = StyleSheet.create({
+  ToStyle: {
+    backgroundColor: "#8000FF",
+    width: 80,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+  },
+  ToTextStyle: {
+    color: "white",
+    fontSize: 14,
+    textAlign: "center",
+  },
 });
 
 export default AddParty;
