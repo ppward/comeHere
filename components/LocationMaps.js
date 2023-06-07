@@ -15,7 +15,6 @@ import Icons from "assets";
 
 const setUserLocation = (lat, long) => {
   //사용자의 위치를 저장(json 키로 변경하는 함수)
-
   const setState = {
     userLocation: {
       latitude: lat, //props의 위도저장
@@ -31,7 +30,6 @@ const defaultRegion = {
   latitudeDelta: 0.0922,
   longitudeDelta: 0.0421,
 };
-
 const GetLocation = () => {
   // 사용자의 현재위치를 받아오는 함수
   const [err, setErr] = useState(null); // 에러 핸들링을 하기위한 상태값
@@ -57,7 +55,6 @@ const GetLocation = () => {
   }, [location]); // [location]의 값이 변할 때 마다 동작
   return location; // location (위치정보) 반환
 };
-
 const LocationMaps = (props) => {
   //컴포넌트의 메인 리턴
   let locate = GetLocation(); //위의 위치정보 받아오는 함수 선언
@@ -67,7 +64,6 @@ const LocationMaps = (props) => {
 
   const handleQueryChange = async (value) => {
     setQuery(value);
-
     try {
       const encodedValue = encodeURIComponent(value);
       const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodedValue}&key=${API_KEY}`;
@@ -84,10 +80,8 @@ const LocationMaps = (props) => {
       setPredictions([]);
     }
   };
-
   const handlePredictionPress = async (prediction) => {
     setSelectedPlace(prediction);
-
     try {
       const placeDetailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction.place_id}&key=${API_KEY}`;
       const placeDetailsResponse = await fetch(placeDetailsUrl);
@@ -103,7 +97,6 @@ const LocationMaps = (props) => {
       console.log(error);
     }
   };
-
   const getMapViewRegion = () => {
     if (selectedPlace && selectedPlace.lat && selectedPlace.lng) {
       return {
