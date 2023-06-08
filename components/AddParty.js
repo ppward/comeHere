@@ -18,6 +18,7 @@ import MapView from "react-native-maps"; //지도호출하는
 import { PROVIDER_GOOGLE } from "react-native-maps"; //구글 지도로 변환하는 PROVIDER
 
 const screenWidth = Dimensions.get("screen").width;
+const API_KEY = "AIzaSyDKh2OlCH3rXcL_W5PokwjbazZvQunwljw";
 
 const setUserLocation = (lat, long) => {
   //사용자의 위치를 저장(json 키로 변경하는 함수)

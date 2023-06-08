@@ -12,16 +12,17 @@ import {
   PanResponder,
   TouchableWithoutFeedback,
   Modal,
+  StatusBar,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
+import DatePicker from "react-native-date-picker";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import Icons from "../../assets";
 // import PICKERS from "./pickers";
 
-const toggle = false;
-
 const Separator = () => <View style={styles.separator} />;
 
-const DefineParty = () => {
+const DefineParty = (props) => {
   function term() {
     const [isShortTermActive, setShortTermActive] = useState(false);
     const [isRegularActive, setRegularActive] = useState(false);
@@ -136,10 +137,9 @@ const DefineParty = () => {
                     <Text style={modalInnerStyle.badgeLogTitle}>
                       모임 주기 설정
                     </Text>
-                    <View
-                      style={{ paddingBottom: 150, backgroundColor: "blue" }}
-                    >
-                      <Text>주기설정</Text>
+                    <View style={styles4.periodView}>
+                      {choosePeriod()}
+                      <Text style={styles4.chosenPeriodText}>3일마다</Text>
                     </View>
                     <Text style={modalInnerStyle.introductionText}>
                       아무 곳이나 클릭하면 나가집니다.
@@ -430,8 +430,99 @@ const DefineParty = () => {
       </View>
     );
   }
+  function chooseDate() {
+    const [date, onChangeDate] = useState(new Date()); // 선택 날짜
+    const [mode, setMode] = useState("date"); // 모달 유형
+    const [visible, setVisible] = useState(false); // 모달 노출 여부
+    const onPressDate = () => {
+      // 날짜 클릭 시
+      setMode("date"); // 모달 유형을 date로 변경
+      setVisible(true); // 모달 open
+    };
+    const onPressTime = () => {
+      // 시간 클릭 시
+      setMode("time"); // 모달 유형을 time으로 변경
+      setVisible(true); // 모달 open
+    };
+    const onConfirm = (selectedDate) => {
+      // 날짜 또는 시간 선택 시
+      setVisible(false); // 모달 close
+      onChangeDate(selectedDate); // 선택한 날짜 변경
+    };
+    const onCancel = () => {
+      // 취소 시
+      setVisible(false); // 모달 close
+    };
+    return (
+      <TouchableOpacity>
+        <View style={styles3.dateStyle}>
+          {/* 날짜 선택 영역 */}
+          <View style={styles3.dateViewStyle}>
+            <Pressable style={styles3.dateTextView} onPress={onPressDate}>
+              <Text style={styles3.dateSelectFont}>날짜 선택</Text>
+            </Pressable>
+            <View style={styles3.dateTextView}>
+              <Text style={styles3.dateFontStyle}>23/06/08</Text>
+            </View>
+          </View>
+          {/* 시간 선택 영역 */}
+          <View style={styles3.dateViewStyle}>
+            <Pressable style={styles3.dateTextView} onPress={onPressTime}>
+              <Text style={styles3.dateSelectFont}>시간 선택</Text>
+            </Pressable>
+            <View style={styles3.dateTextView}>
+              <Text style={styles3.dateFontStyle}>16:00</Text>
+            </View>
+          </View>
+        </View>
+        <DateTimePicker
+          isVisible={visible}
+          mode={mode}
+          onConfirm={onConfirm}
+          onCancel={onCancel}
+          date={date}
+        />
+      </TouchableOpacity>
+    );
+  }
+  function choosePeriod() {
+    const [date, onChangeDate] = useState(new Date()); // 선택 날짜
+    const [mode, setMode] = useState("date"); // 모달 유형
+    const [visible, setVisible] = useState(false); // 모달 노출 여부
+    const onPressDate = () => {
+      // 날짜 클릭 시
+      setMode("date"); // 모달 유형을 date로 변경
+      setVisible(true); // 모달 open
+    };
+    const onConfirm = (selectedDate) => {
+      // 날짜 선택 시
+      setVisible(false); // 모달 close
+      onChangeDate(selectedDate); // 선택한 날짜 변경
+    };
+    const onCancel = () => {
+      // 취소 시
+      setVisible(false); // 모달 close
+    };
+    return (
+      <TouchableOpacity onPress={onPressDate}>
+        <View style={styles4.choosePeriodView}>
+          <Text style={styles3.dateFontStyle}>날짜 선택</Text>
+        </View>
+        <DateTimePicker
+          isVisible={visible}
+          mode={mode}
+          display={"calendar"}
+          onConfirm={onConfirm}
+          onCancel={onCancel}
+          date={date}
+          style={{ backgroundColor: "blue" }}
+        />
+      </TouchableOpacity>
+    );
+  }
   return (
     <ScrollView style={{ ...styles.flex, backgroundColor: "white" }}>
+      <StatusBar style="auto" />
       {/* 최상단 텍스트 뷰, styles1 */}
       <View style={styles.viewStyle}>
         <Text style={styles.textStyle}>추가 질문에 답을 해주세요.</Text>
@@ -458,13 +549,18 @@ const DefineParty = () => {
       <Separator />
       {/* 제목, 인원, 날짜 설정 뷰, styles3 */}
       <View style={{ ...styles.viewStyle, flexDirection: "row" }}>
-        <View style={{ ...styles3.settingFontView, marginLeft: 0 }}>
-          <Text style={{ ...styles3.fontStyle }}>파티 제목</Text>
-          <Text style={{ ...styles3.fontStyle }}>인원</Text>
-          <Text style={{ ...styles3.fontStyle }}>세부 카테고리</Text>
-          <Text style={{ ...styles3.fontStyle }}>날짜 및 시간</Text>
+        <View style={styles3.settingView}>
+          <View style={styles3.settingTextView1}>
+            <Text style={styles3.fontStyle}>파티 제목</Text>
+            <Text style={styles3.fontStyle}>인원</Text>
+            <Text style={styles3.fontStyle}>세부 카테고리</Text>
+          </View>
+          <View style={styles3.settingTextView2}>
+            <Text style={styles3.fontStyle}>날짜 및 시간</Text>
+          </View>
         </View>
-        <View style={styles3.settingFontStyle}>
+        <View>
+          {/* 파티 제목 입력 */}
           <TextInput
             style={styles3.textInputStyle}
             title={"PartyTitle"}
@@ -472,6 +568,7 @@ const DefineParty = () => {
             placeholderTextColor={"blue"}
             returnKeyType="next"
           ></TextInput>
+          {/* 인원 수 입력 */}
           {/* TextInput 형식 말고 Dropdown이나 Picker 대체 */}
           <TextInput
             style={styles3.textInputStyle}
@@ -480,6 +577,7 @@ const DefineParty = () => {
             placeholderTextColor={"blue"}
             returnKeyType="next"
           ></TextInput>
+          {/* 카테고리 선택 */}
           <TextInput
             style={styles3.textInputStyle}
             title={"PartyTitle"}
@@ -487,18 +585,18 @@ const DefineParty = () => {
             placeholderTextColor={"blue"}
             returnKeyType="next"
           ></TextInput>
-          <TextInput
-            style={styles3.textInputStyle}
-            title={"PartyTitle"}
-            placeholder={"날짜를 선택해주세요."}
-            placeholderTextColor={"blue"}
-            returnKeyType="next"
-          ></TextInput>
+          {/* 일정 선택 */}
+          <View>{chooseDate()}</View>
         </View>
       </View>
       <Separator />
       <View style={{ alignItems: "center", paddingVertical: 30 }}>
-        <TouchableOpacity style={{ ...styles4.activeStyle }}>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate("DescribeParty");
+          }}
+          style={{ ...styles4.activeStyle }}
+        >
           <Text style={styles4.fontStyle}>다음</Text>
         </TouchableOpacity>
       </View>
@@ -574,16 +672,21 @@ const styles3 = StyleSheet.create({
   fontStyle: {
     fontWeight: "bold",
     fontSize: 21,
-    marginVertical: 17,
   },
-  settingFontView: {
-    marginRight: 15,
-    marginLeft: 20,
-    marginVertical: 10,
+  settingView: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    height: 220,
+  },
+  settingTextView1: {
+    height: 135,
+    justifyContent: "space-between",
     alignItems: "center",
+  },
+  settingTextView2: {
+    height: 85,
     justifyContent: "center",
-    // backgroundColor: "blue",
-    height: 160,
+    alignItems: "center",
   },
   textInputStyle: {
     paddingHorizontal: 10,
@@ -592,7 +695,42 @@ const styles3 = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     width: 225,
-    marginVertical: 10,
+    marginVertical: 6,
+  },
+  dateStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    marginVertical: 6,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 70,
+    width: 225,
+  },
+  dateViewStyle: {
+    width: 70,
+    height: 50,
+    justifyContent: "center",
+  },
+  dateTextView: {
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  dateSelectFont: {
+    fontSize: 15,
+    fontWeight: "bold",
+    alignItems: "center",
+    borderWidth: 0.5,
+    borderRadius: 5,
+    borderColor: "#8000FF",
+    padding: 5,
+    color: "#8000FF",
+  },
+  dateFontStyle: {
+    fontSize: 15,
+    fontWeight: "bold",
+    alignItems: "center",
   },
 });
 const styles4 = StyleSheet.create({
@@ -618,6 +756,25 @@ const styles4 = StyleSheet.create({
     height: 40,
     marginVertical: 20,
     margin: 10,
+  },
+  periodView: {
+    height: 180,
+    alignItems: "center",
+  },
+  chosenPeriodText: {
+    paddingVertical: 20,
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  choosePeriodView: {
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 10,
+    width: 130,
+    height: 50,
+    marginVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 const modalStyle = StyleSheet.create({

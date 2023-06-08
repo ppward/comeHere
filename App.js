@@ -8,6 +8,7 @@ import AppGuide from "./components/AfterUser/AppGuide";
 import PartyLog from "./components/AfterUser/PartyLog";
 import CommentLog from "./components/AfterUser/CommentLog";
 import DefineParty from "./components/AfterAddParty/DefineParty";
+import DescribeParty from "./components/AfterAddParty/DescribeParty";
 import app from "./firebase";
 import Icons from "./assets/icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -40,6 +41,7 @@ export default function App() {
         <Stack.Screen name="PartyLog" component={PartyLog} />
         <Stack.Screen name="CommentLog" component={CommentLog} />
         <Stack.Screen name="DefineParty" component={DefineParty} />
+        <Stack.Screen name="DescribeParty" component={DescribeParty} />
       </Stack.Navigator>
     </NavigationContainer>
   );
