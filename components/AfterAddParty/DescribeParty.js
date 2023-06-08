@@ -9,11 +9,54 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
 } from "react-native";
 import Icons from "assets";
 import React, { useState } from "react";
+import * as ImagePicker from "expo-image-picker";
 
 const Separator = () => <View style={styles.separator} />;
+const ImagePickerComponent = () => {
+  const [imageUrl, setImageUrl] = useState("");
+  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+  const uploadImage = async () => {
+    if (!status?.granted) {
+      const permission = await requestPermission();
+      if (!permission.granted) {
+        return null;
+      }
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 1,
+      aspect: [1, 1],
+    });
+    if (result.canceled) {
+      return null;
+    }
+    setImageUrl(result.uri);
+  };
+  return (
+    <View style={styles2.imageInputView}>
+      {/* 이미지 첨부 뷰 */}
+      <View style={{ paddingTop: 100 }}>
+        <Pressable style={styles2.imageInputStyle} onPress={uploadImage}>
+          <View style={{ alignItems: "center" }}>
+            <Image
+              style={styles2.imageSampleStyle}
+              source={Icons.IMAGE}
+            ></Image>
+          </View>
+        </Pressable>
+      </View>
+      {/* 첨부된 이미지 확인 뷰 */}
+      <View style={{ borderWidth: 0.5, borderRadius: 5 }}>
+        <Image style={styles2.uploadedImage} source={{ uri: imageUrl }}></Image>
+      </View>
+    </View>
+  );
+};
 
 const DescribeParty = (props) => {
   return (
@@ -39,9 +82,9 @@ const DescribeParty = (props) => {
           Keyboard.dismiss();
         }}
       >
-        {/* 파티 설명 */}
         <View style={{ padding: 15, flex: 3 }}>
-          <View style={{ flex: 3 }}>
+          {/* 파티 설명 */}
+          <View style={{ flex: 7 }}>
             <TextInput
               style={styles2.textInputStyle}
               title={"describeContents"}
@@ -53,14 +96,21 @@ const DescribeParty = (props) => {
             ></TextInput>
           </View>
           {/* 이미지 */}
-          <View style={{ flex: 2 }}>
-            <Text style={styles2.imageInputStyle}>imageinput</Text>
-          </View>
+          <View style={{ flex: 6 }}>{ImagePickerComponent()}</View>
         </View>
       </TouchableWithoutFeedback>
       <Separator />
-      <View style={{ padding: 15, flex: 0.7 }}>
-        <Text>hi</Text>
+      {/* 등록 뷰, styles3 */}
+      <View style={{ alignItems: "center", paddingVertical: 30 }}>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate("MainScreen");
+            // 현재파티화면으로 갈지 메인화면으로 갈지 고민
+          }}
+          style={{ ...styles3.activeStyle }}
+        >
+          <Text style={styles3.fontStyle}>다음</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -85,7 +135,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
 const styles1 = StyleSheet.create({
   SummaryView: {
     justifyContent: "center",
@@ -111,10 +160,6 @@ const styles1 = StyleSheet.create({
   },
 });
 const styles2 = StyleSheet.create({
-  descriptionView: {
-    borderWidth: 0.5,
-    borderColor: "gray",
-  },
   textInputStyle: {
     height: "80%",
     padding: 10,
@@ -124,13 +169,49 @@ const styles2 = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 5,
   },
-  imageInputStyle: {
+  imageInputView: {
     borderWidth: 0.5,
     borderColor: "gray",
     borderRadius: 5,
     padding: 10,
     paddingTop: 15,
-    height: "50%",
+    height: "100%",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  imageInputStyle: {
+    borderWidth: 0.5,
+    borderColor: "gray",
+    borderRadius: 5,
+    height: 80,
+    width: 130,
+    justifyContent: "center",
+  },
+  imageSampleStyle: {
+    height: 40,
+    width: 40,
+  },
+  uploadedImage: {
+    width: 180,
+    height: 180,
+    resizeMode: "contain",
+  },
+});
+const styles3 = StyleSheet.create({
+  fontStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  activeStyle: {
+    justifyContent: "center",
+    backgroundColor: "#8000FF",
+    borderRadius: 20,
+    width: 60,
+    height: 40,
+    marginVertical: 20,
+    margin: 10,
   },
 });
 

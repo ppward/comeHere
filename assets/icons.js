@@ -89,6 +89,7 @@ const icons = {
   BADGE: require("./crown.png"),
   QUESTION: require("./question.png"),
   BRACE: require("./brace.png"),
+  IMAGE: require("./image.png"),
 };
 
 export default icons;
