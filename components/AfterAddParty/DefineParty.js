@@ -13,12 +13,11 @@ import {
   TouchableWithoutFeedback,
   Modal,
   StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
-import DatePicker from "react-native-date-picker";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Icons from "../../assets";
-// import PICKERS from "./pickers";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -430,6 +429,160 @@ const DefineParty = (props) => {
       </View>
     );
   }
+  function chooseCategoryDetail() {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const screenHeight = Dimensions.get("screen").height;
+    const panY = useRef(new Animated.Value(screenHeight)).current;
+    const translateY = panY.interpolate({
+      inputRange: [-1, 0, 1],
+      outputRange: [-1, 0, 1],
+    });
+    const resetBottomSheet = Animated.timing(panY, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    const closeBottomSheet = Animated.timing(panY, {
+      toValue: screenHeight,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    const panResponder = useRef(
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (event, gestureState) =>
+          panY.setValue(gestureState.dy),
+        onPanResponderRelease: (event, gestureState) => {
+          if (gestureState.dy > 0 && gestureState.vy > 1.5) {
+            closeModal();
+          } else {
+            resetBottomSheet.start();
+          }
+        },
+      })
+    ).current;
+    const closeModal = () => {
+      closeBottomSheet.start(() => setIsModalVisible(false));
+    };
+    useEffect(() => {
+      if (isModalVisible) {
+        resetBottomSheet.start();
+      }
+    }, [isModalVisible]);
+    const modalStyle = StyleSheet.create({
+      flexible: {
+        flex: 1,
+      }, // flex 속성 지정
+      alignContentsCenter: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }, // 가로세로 중앙정렬
+      modalOverlay: {
+        flex: 1,
+        justifyContent: "flex-end",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+      }, // 모달이 띄워졌을 때 화면을 어둡게 하기 위한 오버레이
+      bottomSheetContainer: {
+        height: 500,
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
+        padding: 20,
+      }, // 모달 스타일
+    });
+    const modalInnerStyle = StyleSheet.create({
+      badgeLogTitle: {
+        fontSize: 22,
+        fontWeight: "700",
+        paddingBottom: 10,
+      },
+      introductionText: {
+        color: "#f00",
+        textAlign: "center",
+        fontSize: 16,
+      },
+    });
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles3.chooseCategoryView}
+          onPress={() => {
+            setIsModalVisible(isModalVisible == false);
+          }}
+        >
+          <Text style={styles3.chooseCategoryText}>
+            세부 카테고리를 선택해주세요.
+          </Text>
+        </TouchableOpacity>
+        <Modal
+          visible={isModalVisible}
+          animationType={"fade"}
+          transparent={true}
+          statusBarTranslucent={true}
+        >
+          <Pressable
+            style={modalStyle.modalOverlay}
+            onPress={() => setIsModalVisible(isModalVisible == false)}
+          >
+            <TouchableWithoutFeedback>
+              <Animated.View
+                style={{
+                  ...modalStyle.bottomSheetContainer,
+                  transform: [{ translateY: translateY }],
+                }}
+                {...panResponder.panHandlers}
+              >
+                {/* 모달에 들어갈 내용을 아래에 작성 */}
+                <View style={{ flex: 1 }}>
+                  {/* 제목 뷰 */}
+                  <View style={{ flex: 0.5 }}>
+                    <Text style={modalInnerStyle.badgeLogTitle}>
+                      세부 카테고리 선택
+                    </Text>
+                  </View>
+                  {/* 세부 카테고리 뷰 */}
+                  <View style={{ flex: 3 }}>
+                    <ScrollView>
+                      {/* 세부 카테고리 리스트 */}
+                      <TouchableOpacity style={styles3.categoryList}>
+                        <Image
+                          style={styles.icon}
+                          source={Icons.COOKING}
+                        ></Image>
+                        <Text>카테고리 리스트</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles3.categoryList}>
+                        <Image
+                          style={styles.icon}
+                          source={Icons.COOKING}
+                        ></Image>
+                        <Text>카테고리 리스트</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles3.categoryList}>
+                        <Image
+                          style={styles.icon}
+                          source={Icons.COOKING}
+                        ></Image>
+                        <Text>카테고리 리스트</Text>
+                      </TouchableOpacity>
+                    </ScrollView>
+                  </View>
+                  {/* 안내문 뷰 */}
+                  <View style={{ flex: 0.5 }}>
+                    <Text style={modalInnerStyle.introductionText}>
+                      아무 곳이나 클릭하면 나가집니다.
+                    </Text>
+                  </View>
+                </View>
+              </Animated.View>
+            </TouchableWithoutFeedback>
+          </Pressable>
+        </Modal>
+      </View>
+    );
+  }
   function chooseDate() {
     const [date, onChangeDate] = useState(new Date()); // 선택 날짜
     const [mode, setMode] = useState("date"); // 모달 유형
@@ -547,7 +700,7 @@ const DefineParty = (props) => {
         </View>
       </View>
       <Separator />
-      {/* 제목, 인원, 날짜 설정 뷰, styles3 */}
+      {/* 제목, 인원, 세부 카테고리, 날짜 설정 뷰, styles3 */}
       <View style={{ ...styles.viewStyle, flexDirection: "row" }}>
         <View style={styles3.settingView}>
           <View style={styles3.settingTextView1}>
@@ -578,13 +731,7 @@ const DefineParty = (props) => {
             returnKeyType="next"
           ></TextInput>
           {/* 카테고리 선택 */}
-          <TextInput
-            style={styles3.textInputStyle}
-            title={"PartyTitle"}
-            placeholder={"카테고리를 선택해주세요."}
-            placeholderTextColor={"blue"}
-            returnKeyType="next"
-          ></TextInput>
+          <View>{chooseCategoryDetail()}</View>
           {/* 일정 선택 */}
           <View>{chooseDate()}</View>
         </View>
@@ -593,7 +740,7 @@ const DefineParty = (props) => {
       <View style={{ alignItems: "center", paddingVertical: 30 }}>
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate("DescribeParty");
+            props.navigation.navigate("파티 설명하기");
           }}
           style={{ ...styles4.activeStyle }}
         >
@@ -731,6 +878,26 @@ const styles3 = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     alignItems: "center",
+  },
+  chooseCategoryView: {
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: "gray",
+    height: 35,
+    justifyContent: "center",
+  },
+  chooseCategoryText: {
+    marginLeft: 7,
+    color: "blue",
+  },
+  categoryList: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderRadius: 7,
+    borderColor: "gray",
+    marginBottom: 10,
   },
 });
 const styles4 = StyleSheet.create({

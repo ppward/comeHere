@@ -306,7 +306,7 @@ const User = (props) => {
           {/* 환경설정 */}
           <TouchableOpacity
             onPress={() => {
-              props.navigation.navigate("Settings");
+              props.navigation.navigate("환경설정");
             }}
           >
             <Image
@@ -354,7 +354,7 @@ const User = (props) => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate("PartyLog");
+                props.navigation.navigate("파티 참여내역");
               }}
             >
               <View style={styles3.activityView}>
@@ -370,7 +370,7 @@ const User = (props) => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate("CommentLog");
+                props.navigation.navigate("최근 댓글");
               }}
             >
               <View style={{ ...styles3.activityView, marginRight: -45 }}>

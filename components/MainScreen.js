@@ -1,7 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Button, Text, Image, StatusBar } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { StyleSheet, Image } from "react-native";
 import LocationMaps from "./LocationMaps";
 import Ranking from "./Ranking";
 import CurrentParty from "./CurrentParty";
@@ -13,13 +12,18 @@ const MainScreen = () => {
   return (
     <Tab.Navigator initialRouteName="Location">
       <Tab.Screen
-        name="Party"
+        name="현재 파티"
         component={CurrentParty}
         options={{
+          tabBarActiveTintColor: "purple",
+          tabBarLabelStyle: { fontWeight: "bold" },
           tabBarIcon: ({ focused }) => {
             return (
               <Image
-                style={{ width: 24, height: 24 }}
+                style={{
+                  ...styles.imageStyle,
+                  tintColor: focused ? "#8000FF" : "black",
+                }}
                 source={require("../assets/network.png")}
               />
             );
@@ -27,13 +31,18 @@ const MainScreen = () => {
         }}
       />
       <Tab.Screen
-        name="Location"
+        name="지도"
         component={LocationMaps}
         options={{
+          tabBarActiveTintColor: "purple",
+          tabBarLabelStyle: { fontWeight: "bold" },
           tabBarIcon: ({ focused }) => {
             return (
               <Image
-                style={{ width: 24, height: 24 }}
+                style={{
+                  ...styles.imageStyle,
+                  tintColor: focused ? "#8000FF" : "gray",
+                }}
                 source={require("../assets/map.png")}
               />
             );
@@ -41,13 +50,18 @@ const MainScreen = () => {
         }}
       />
       <Tab.Screen
-        name="Ranking"
+        name="순위"
         component={Ranking}
         options={{
+          tabBarActiveTintColor: "purple",
+          tabBarLabelStyle: { fontWeight: "bold" },
           tabBarIcon: ({ focused }) => {
             return (
               <Image
-                style={{ width: 24, height: 24 }}
+                style={{
+                  ...styles.imageStyle,
+                  tintColor: focused ? "#8000FF" : "black",
+                }}
                 source={require("../assets/ranking.png")}
               />
             );
@@ -55,13 +69,18 @@ const MainScreen = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="프로필"
         component={User}
         options={{
+          tabBarActiveTintColor: "purple",
+          tabBarLabelStyle: { fontWeight: "bold" },
           tabBarIcon: ({ focused }) => {
             return (
               <Image
-                style={{ width: 24, height: 24 }}
+                style={{
+                  ...styles.imageStyle,
+                  tintColor: focused ? "#8000FF" : "gray",
+                }}
                 source={require("../assets/user.png")}
               />
             );
@@ -71,5 +90,12 @@ const MainScreen = () => {
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  imageStyle: {
+    width: 24,
+    height: 24,
+  },
+});
 
 export default MainScreen;

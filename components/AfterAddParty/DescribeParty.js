@@ -5,11 +5,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  ScrollView,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
+  Alert,
 } from "react-native";
 import Icons from "assets";
 import React, { useState } from "react";
@@ -51,7 +51,7 @@ const ImagePickerComponent = () => {
         </Pressable>
       </View>
       {/* 첨부된 이미지 확인 뷰 */}
-      <View style={{ borderWidth: 0.5, borderRadius: 5 }}>
+      <View style={{ borderWidth: 0.5, borderRadius: 5, borderColor: "gray" }}>
         <Image style={styles2.uploadedImage} source={{ uri: imageUrl }}></Image>
       </View>
     </View>
@@ -104,12 +104,18 @@ const DescribeParty = (props) => {
       <View style={{ alignItems: "center", paddingVertical: 30 }}>
         <TouchableOpacity
           onPress={() => {
+            Alert.alert("파티 등록이 완료되었습니다.");
             props.navigation.navigate("MainScreen");
-            // 현재파티화면으로 갈지 메인화면으로 갈지 고민
+            {
+              /*
+              alert 창 확인 버튼 누르고 메인 화면으로 옮기려 했으나
+              앱 버그때문에 바로 메인화면으로 가게 됨
+            */
+            }
           }}
           style={{ ...styles3.activeStyle }}
         >
-          <Text style={styles3.fontStyle}>다음</Text>
+          <Text style={styles3.fontStyle}>완료</Text>
         </TouchableOpacity>
       </View>
     </View>

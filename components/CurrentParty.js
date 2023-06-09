@@ -6,6 +6,7 @@ import {
   ScrollView,
   Button,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import Icons from "assets";
 import { useState } from "react";
@@ -37,7 +38,7 @@ const CurrentParty = () => {
       <ScrollView style={{ flex: 1 }}>
         {/* 1번째 뷰, styles1 */}
         <View>
-          {/* 위 3개 뷰 */}
+          {/* 카테고리, 위치, 인원수 뷰 */}
           <View style={{ ...styles1.defaultInfo, marginTop: 20 }}>
             <Image style={styles.icon} source={Icons.BASEBALL} />
             <View style={styles.flexRowAndAlignCenter}>
@@ -46,7 +47,7 @@ const CurrentParty = () => {
             </View>
             <Button title={headCount} />
           </View>
-          {/* 아래 3개 뷰 */}
+          {/* 경쟁, 정기, 합병 여부 확인 뷰 */}
           <View style={styles1.defaultInfo}>
             <Button title="경쟁" />
             <Button title="정기" />
@@ -54,72 +55,115 @@ const CurrentParty = () => {
           </View>
         </View>
         {/* 2번째 뷰, styles2 */}
-        <View>
-          <View style={styles2.partyDescription}>
-            {/* 파티 아이콘/제목 뷰 */}
-            <View style={styles.flexDirectionRow}>
-              <Image style={styles.icon} source={Icons.BASEBALL} />
-              <Button title="파티제목" onPress={() => {}} />
-            </View>
-            {/* 파티 설명 뷰, 바깥 뷰는 border 목적 */}
-            <View>
-              <View style={{ paddingBottom: 150 }}>
-                <Description />
-              </View>
+        <View style={styles2.partyDescription}>
+          {/* 파티 아이콘/제목 뷰 */}
+          <View style={styles.flexDirectionRow}>
+            <Image style={styles.icon} source={Icons.BASEBALL} />
+            <Button title="파티제목" onPress={() => {}} />
+          </View>
+          {/* 파티 설명 뷰, 바깥 뷰는 border 목적 */}
+          <View>
+            <View style={{ paddingBottom: 150 }}>
+              <Description />
             </View>
           </View>
         </View>
         {/* 3번째 뷰, styles3 */}
-        <View>
-          <View style={styles3.partyInfo}>
-            {/* 파티 장소 및 설명 뷰 */}
-            <View>
-              <View style={styles.flexRowAndAlignCenter}>
-                <Image
-                  style={{ width: 25, height: 25 }}
-                  source={Icons.ASTERISK}
-                />
-                <Button title="파티장소:" />
-              </View>
-              <View style={styles.flexRowAndAlignCenter}>
-                <Image style={styles.icon} source={Icons.LOCATION} />
-                <Button title="설명" />
-              </View>
+        <View style={styles3.partyInfo}>
+          {/* 파티 장소 및 설명 뷰 */}
+          <View>
+            <View style={styles.flexRowAndAlignCenter}>
+              <Image
+                style={{ width: 25, height: 25 }}
+                source={Icons.ASTERISK}
+              />
+              <Button title="파티장소:" />
             </View>
-            {/* 파티 일정 및 설명 뷰 */}
-            <View>
-              <View style={styles.flexRowAndAlignCenter}>
-                <Image
-                  style={{ width: 25, height: 25 }}
-                  source={Icons.ASTERISK}
-                />
-                <Button title="파티일정:" />
-              </View>
-              <View style={styles.flexRowAndAlignCenter}>
-                <Image style={styles.icon} source={Icons.CALENDAR} />
-                <Button title="설명" />
-              </View>
+            <View style={styles.flexRowAndAlignCenter}>
+              <Image style={styles.icon} source={Icons.LOCATION} />
+              <Button title="설명" />
+            </View>
+          </View>
+          {/* 파티 일정 및 설명 뷰 */}
+          <View>
+            <View style={styles.flexRowAndAlignCenter}>
+              <Image
+                style={{ width: 25, height: 25 }}
+                source={Icons.ASTERISK}
+              />
+              <Button title="파티일정:" />
+            </View>
+            <View style={styles.flexRowAndAlignCenter}>
+              <Image style={styles.icon} source={Icons.CALENDAR} />
+              <Button title="설명" />
             </View>
           </View>
         </View>
-        {/* 4번째 뷰, styles3 */}
-        <View>
-          <View style={styles4.partyConfig}>
-            <View style={styles.flexRowAndAlignCenter}>
-              <Image style={styles.icon} source={Icons.CHAT} />
-              <Button title="대화방 입장" />
+        {/* 4번째 뷰, styles4 */}
+        <View style={styles4.partyConfig}>
+          {/* 대화방 */}
+          <TouchableOpacity
+            onPress={() => {
+              // props.navigation.navigate("DescribeParty");
+            }}
+            style={{ ...styles4.chatBtn }}
+          >
+            <View style={styles4.chatView}>
+              <View>
+                <Image
+                  style={{ ...styles.icon, tintColor: "white" }}
+                  source={Icons.CHAT}
+                />
+              </View>
+              <View>
+                <Text style={styles4.fontStyle}>대화방 입장</Text>
+              </View>
             </View>
-            <View style={{ ...styles4.partyThing, paddingTop: 20 }}>
-              <Button title="파티 삭제" />
-              <Button title="수정하기" />
+          </TouchableOpacity>
+          {/* 삭제, 수정, 탈퇴 */}
+          <View style={styles4.partyRelated}>
+            {/* 파티 탈퇴 */}
+            <View style={styles4.partyExit}>
+              <TouchableOpacity
+                onPress={() => {
+                  // props.navigation.navigate("DescribeParty");
+                }}
+                style={{ ...styles4.partyBtn, backgroundColor: "#F2F2F2" }}
+              >
+                <Text style={{ ...styles4.fontStyle, color: "#A4A4A4" }}>
+                  파티 탈퇴
+                </Text>
+              </TouchableOpacity>
             </View>
-            <View style={{ ...styles4.partyThing, paddingBottom: 20 }}>
-              <Button title="파티 탈퇴" />
-              <Button title="합병하기" />
-            </View>
-            <View style={styles.flexRowAndAlignCenter}>
-              <Image style={{ width: 50, height: 50 }} source={Icons.START} />
-              <Button title="파티 시작하기" />
+            {/* 삭제, 수정 / 파티장만 가능 */}
+            <View
+              style={{
+                ...styles4.partyThing,
+                borderWidth: 1,
+                borderRadius: 10,
+                borderColor: "gray",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  // props.navigation.navigate("DescribeParty");
+                }}
+                style={{ ...styles4.partyBtn, backgroundColor: "#424242" }}
+              >
+                <Text style={{ ...styles4.fontStyle, color: "#FE2E2E" }}>
+                  파티 삭제
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  // props.navigation.navigate("DescribeParty");
+                }}
+                style={{ ...styles4.partyBtn, backgroundColor: "#424242" }}
+              >
+                <Text style={{ ...styles4.fontStyle, color: "#FE2E2E" }}>
+                  파티 수정
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -189,10 +233,51 @@ const styles4 = StyleSheet.create({
     paddingBottom: 15,
   },
   partyThing: {
-    flexDirection: "row",
-    paddingLeft: 50,
-    paddingRight: 50,
+    // flexDirection: "row",
+    width: 120,
+    height: 100,
     alignItems: "center",
+    justifyContent: "space-around",
+  },
+  partyBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#8000FF",
+    borderRadius: 20,
+    width: 100,
+    height: 40,
+    // margin: 10,
+  },
+  chatView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "85%",
+  },
+  chatBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#8000FF",
+    borderRadius: 20,
+    width: 150,
+    height: 50,
+    marginVertical: 20,
+    margin: 10,
+  },
+  fontStyle: {
+    fontWeight: "500",
+    color: "white",
+    fontSize: 16,
+  },
+  partyRelated: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+  },
+  partyExit: {
+    alignItems: "flex-end",
+    justifyContent: "space-around",
+    flexDirection: "row",
   },
 });
 

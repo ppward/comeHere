@@ -56,7 +56,7 @@ const Settings = (props) => {
         <View>
           <TouchableOpacity
             onPress={() => {
-              props.navigation.navigate("AppGuide");
+              props.navigation.navigate("가이드라인");
             }}
           >
             <View style={styles.settingView}>
@@ -70,7 +70,7 @@ const Settings = (props) => {
         <View>
           <TouchableOpacity
             onPress={() => {
-              props.navigation.navigate("AppPolicy");
+              props.navigation.navigate("약관 및 정책");
             }}
           >
             <View style={styles.settingView}>

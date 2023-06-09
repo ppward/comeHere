@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  StatusBar,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import { useState, useEffect } from "react";
 import MapView from "react-native-maps"; //지도호출하는
 import { PROVIDER_GOOGLE } from "react-native-maps"; //구글 지도로 변환하는 PROVIDER
@@ -128,29 +120,10 @@ const LocationMaps = (props) => {
           />
         )}
       </MapView>
-      <View style={{ ...styles.inputContainer }}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter a location"
-          value={query}
-          onChangeText={handleQueryChange}
-        />
-        <View style={styles.predictionsContainer}>
-          {predictions.map((prediction) => (
-            <Text
-              key={prediction.place_id}
-              style={styles.predictionText}
-              onPress={() => handlePredictionPress(prediction)}
-            >
-              {prediction.description}
-            </Text>
-          ))}
-        </View>
-      </View>
       <View style={{ position: "absolute", top: "75%", left: 10 }}>
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate("AddParty");
+            props.navigation.navigate("파티 생성하기");
           }}
           style={styles.button}
         >
@@ -192,21 +165,17 @@ const styles = StyleSheet.create({
     maxHeight: 120,
     overflow: "scroll",
   },
-  predictionText: {
-    paddingVertical: 5,
-  },
   button: {
     width: 50,
     height: 50,
-    marginTop: "155%",
+    marginTop: "158%",
     marginLeft: "3%",
     padding: 10,
     borderRadius: 25,
     alignItems: "center",
-    lineHeight: 3,
     borderWidth: "0.5px",
     backgroundColor: "white",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   icon: {
     width: 32,

@@ -123,8 +123,6 @@ const AddParty = (props) => {
           placeholder="장소를 검색해주세요."
           placeholderTextColor={"blue"}
           returnKeyType="next"
-          // value={nickname}
-          // onChangeText={(text) => setNickname(text)}
         ></TextInput>
       </View>
       {/* 지도 뷰, styles2 */}
@@ -147,13 +145,16 @@ const AddParty = (props) => {
             />
           )}
         </MapView>
+        <View style={{ ...styles1.overlayView, display: "none" }}>
+          <ScrollView style={{ backgroundColor: "black" }}></ScrollView>
+        </View>
       </View>
       {/* 다음 버튼 뷰, styles3 */}
       <View style={{ flex: 0.5, alignItems: "center", paddingTop: 30 }}>
         <TouchableOpacity
           style={styles3.ToStyle}
           onPress={() => {
-            props.navigation.navigate("DefineParty");
+            props.navigation.navigate("파티 설정하기");
           }}
         >
           <Text style={styles3.ToTextStyle}>다음</Text>
@@ -191,6 +192,16 @@ const styles1 = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     width: screenWidth - 30,
+  },
+  overlayView: {
+    position: "absolute",
+    top: 10, // Adjust the top position as needed
+    left: 10, // Adjust the left position as needed
+    right: 10, // Adjust the right position as needed
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Example background color with transparency
+    padding: 10,
+    height: 150,
+    borderRadius: 10,
   },
 });
 

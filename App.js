@@ -33,15 +33,15 @@ export default function App() {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="AddParty" component={AddParty} />
-        <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="파티 생성하기" component={AddParty} />
+        <Stack.Screen name="환경설정" component={Settings} />
         <Stack.Screen name="Loginpage" component={Auth} />
-        <Stack.Screen name="AppPolicy" component={AppPolicy} />
-        <Stack.Screen name="AppGuide" component={AppGuide} />
-        <Stack.Screen name="PartyLog" component={PartyLog} />
-        <Stack.Screen name="CommentLog" component={CommentLog} />
-        <Stack.Screen name="DefineParty" component={DefineParty} />
-        <Stack.Screen name="DescribeParty" component={DescribeParty} />
+        <Stack.Screen name="약관 및 정책" component={AppPolicy} />
+        <Stack.Screen name="가이드라인" component={AppGuide} />
+        <Stack.Screen name="파티 참여내역" component={PartyLog} />
+        <Stack.Screen name="최근 댓글" component={CommentLog} />
+        <Stack.Screen name="파티 설정하기" component={DefineParty} />
+        <Stack.Screen name="파티 설명하기" component={DescribeParty} />
       </Stack.Navigator>
     </NavigationContainer>
   );
