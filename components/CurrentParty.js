@@ -36,24 +36,37 @@ const CurrentParty = () => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <ScrollView style={{ flex: 1 }}>
-        {/* 1번째 뷰, styles1 */}
+        {/* 카테고리, 위치, 인원수, 경쟁, 정기 확인 뷰, styles1 */}
         <View>
           {/* 카테고리, 위치, 인원수 뷰 */}
-          <View style={{ ...styles1.defaultInfo, marginTop: 20 }}>
-            <Image style={styles.icon} source={Icons.BASEBALL} />
-            <View style={styles.flexRowAndAlignCenter}>
-              <Image style={styles.icon} source={Icons.LOCATION} />
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>{city}</Text>
+          <View style={{ ...styles1.container, marginTop: 20 }}>
+            {/* 카테고리 */}
+            <View style={styles1.infoView}>
+              <Image style={styles.icon} source={Icons.BASEBALL} />
             </View>
-            <Button title={headCount} />
+            {/* 위치 */}
+            <View style={styles1.infoView}>
+              <Image style={styles1.locationIcon} source={Icons.LOCATION} />
+              <Text style={styles1.locationText}>{city}</Text>
+            </View>
+            {/* 인원 수 */}
+            <View style={styles1.infoView}>
+              <Text style={styles1.peopleText}>{headCount}</Text>
+            </View>
           </View>
-          {/* 경쟁, 정기, 합병 여부 확인 뷰 */}
-          <View style={styles1.defaultInfo}>
-            <Button title="경쟁" />
-            <Button title="정기" />
-            <Button title="합병" />
+          {/* 경쟁, 정기 여부 확인 뷰 */}
+          <View style={styles1.container}>
+            {/* 경쟁 가능 여부 */}
+            <View style={styles1.infoView}>
+              <Text>경쟁</Text>
+            </View>
+            {/* 정기 모임 여부 */}
+            <View style={styles1.infoView}>
+              <Text>정기</Text>
+            </View>
           </View>
         </View>
+
         {/* 2번째 뷰, styles2 */}
         <View style={styles2.partyDescription}>
           {/* 파티 아이콘/제목 뷰 */}
@@ -192,12 +205,37 @@ const styles = StyleSheet.create({
 });
 
 const styles1 = StyleSheet.create({
-  defaultInfo: {
-    backgroundColor: "white",
+  container: {
     flexDirection: "row",
-    padding: 5,
-    flex: 1,
     justifyContent: "space-around",
+    flex: 1,
+  },
+  infoView: {
+    flex: 1,
+    margin: 5,
+    height: 50,
+    width: "100%",
+    borderWidth: 0.5,
+    borderColor: "#5858FA",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: "#F8EFFB",
+  },
+  locationIcon: {
+    width: 25,
+    height: 25,
+    margin: 5,
+    tintColor: "#8000FF",
+  },
+  locationText: {
+    fontSize: 20,
+    fontWeight: "500",
+    margin: 5,
+  },
+  peopleText: {
+    fontSize: 17,
   },
 });
 

@@ -4,13 +4,8 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  StatusBar,
-  Button,
   TextInput,
-  Image,
   Dimensions,
-  Alert,
-  ActivityIndicator,
 } from "react-native";
 import Icons from "assets";
 import * as Location from "expo-location";
@@ -18,6 +13,7 @@ import { useState, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps"; //지도호출하는
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
+
 const screenWidth = Dimensions.get("screen").width;
 const API_KEY = "AIzaSyDKh2OlCH3rXcL_W5PokwjbazZvQunwljw";
 
@@ -128,12 +124,20 @@ const AddParty = (props) => {
     return defaultRegion;
   };
 
+  const [documentId, setDocumentId] = useState("");
+
   const saveLocation = async (latitude, longitude) => {
-    const docRef = await addDoc(collection(db, "party"), {
-      latitude: latitude,
-      longitude: longitude,
-    });
-    console.log("위도와 경도가 저장되었습니다. 문서 ID:", docRef.id);
+    try {
+      const docRef = await addDoc(collection(db, "party"), {
+        latitude: latitude,
+        longitude: longitude,
+      });
+
+      setDocumentId(docRef.id);
+      props.navigation.navigate("파티 설정하기", { documentId: docRef.id });
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
 
   return (
@@ -201,9 +205,8 @@ const AddParty = (props) => {
         <TouchableOpacity
           style={styles3.ToStyle}
           onPress={() => {
+            // saveLocation(db_lat,db_lng)
             props.navigation.navigate("파티 설정하기");
-            saveLocation(db_lat, db_lng);
-            console.log(db_lat);
           }}
         >
           <Text style={styles3.ToTextStyle}>다음</Text>
