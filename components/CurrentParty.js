@@ -57,12 +57,12 @@ const CurrentParty = () => {
           {/* 경쟁, 정기 여부 확인 뷰 */}
           <View style={styles1.container}>
             {/* 경쟁 가능 여부 */}
-            <View style={styles1.infoView}>
-              <Text>경쟁</Text>
+            <View style={styles1.infoActiveView}>
+              <Text style={styles1.infoActiveText}>경쟁</Text>
             </View>
             {/* 정기 모임 여부 */}
-            <View style={styles1.infoView}>
-              <Text>정기</Text>
+            <View style={styles1.infoActiveView}>
+              <Text style={styles1.infoActiveText}>정기</Text>
             </View>
           </View>
         </View>
@@ -235,6 +235,29 @@ const styles1 = StyleSheet.create({
     margin: 5,
   },
   peopleText: {
+    fontSize: 17,
+  },
+  compText: {
+    fontSize: 17,
+  },
+  termText: {
+    fontSize: 17,
+  },
+  infoActiveView: {
+    flex: 1,
+    margin: 5,
+    height: 50,
+    width: "100%",
+    borderWidth: 0.5,
+    borderColor: "#5858FA",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: "#5858FA",
+  },
+  infoActiveText: {
+    color: "white",
     fontSize: 17,
   },
 });

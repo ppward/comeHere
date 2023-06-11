@@ -415,24 +415,26 @@ const choosePeriod = () => {
     return daysOfWeek[dayIndex];
   };
   return (
-    <TouchableOpacity onPress={onPressDate}>
-      <View style={{ alignItems: "center" }}>
-        <View style={styles4.choosePeriodView}>
-          <Text style={styles3.dateFontStyle}>날짜 선택</Text>
+    <View style={{ alignItems: "center" }}>
+      <TouchableOpacity onPress={onPressDate}>
+        <View style={{ alignItems: "center" }}>
+          <View style={styles4.choosePeriodView}>
+            <Text style={styles3.dateFontStyle}>날짜 선택</Text>
+          </View>
         </View>
-        <Text style={styles4.chosenPeriodText}>
-          매주 {getDayOfWeek(selectedDay)}마다
-        </Text>
-      </View>
-      <DateTimePicker
-        isVisible={visible}
-        mode={mode}
-        display={"calendar"}
-        onConfirm={onConfirm}
-        onCancel={onCancel}
-        date={date}
-      />
-    </TouchableOpacity>
+        <DateTimePicker
+          isVisible={visible}
+          mode={mode}
+          display={"calendar"}
+          onConfirm={onConfirm}
+          onCancel={onCancel}
+          date={date}
+        />
+      </TouchableOpacity>
+      <Text style={styles4.chosenPeriodText}>
+        매주 {getDayOfWeek(selectedDay)}마다
+      </Text>
+    </View>
   );
 };
 const comp = () => {
