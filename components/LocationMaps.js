@@ -19,8 +19,8 @@ const setUserLocation = (lat, long) => {
 const defaultRegion = {
   latitude: 36.7997761,
   longitude: 127.0748502,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
+  latitudeDelta: 0.025,
+  longitudeDelta: 0.025,
 };
 const GetLocation = () => {
   // 사용자의 현재위치를 받아오는 함수
@@ -94,8 +94,8 @@ const LocationMaps = (props) => {
       return {
         latitude: selectedPlace.lat,
         longitude: selectedPlace.lng,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: defaultRegion.latitudeDelta,
+        longitudeDelta: defaultRegion.longitudeDelta,
       };
     }
     return defaultRegion;
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: "0.5px",
     backgroundColor: "white",
-    justifyContent: "center",
+    justifyContent: "ceneta",
   },
   icon: {
     width: 32,

@@ -10,13 +10,14 @@ import {
   Image,
   Dimensions,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import Icons from "assets";
 import * as Location from "expo-location";
 import { useState, useEffect } from "react";
-import MapView from "react-native-maps"; //지도호출하는
-import { PROVIDER_GOOGLE } from "react-native-maps"; //구글 지도로 변환하는 PROVIDER
-
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps"; //지도호출하는
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 const screenWidth = Dimensions.get("screen").width;
 const API_KEY = "AIzaSyDKh2OlCH3rXcL_W5PokwjbazZvQunwljw";
 
@@ -62,11 +63,17 @@ const GetLocation = () => {
   }, [location]); // [location]의 값이 변할 때 마다 동작
   return location; // location (위치정보) 반환
 };
+
 const AddParty = (props) => {
   let locate = GetLocation(); //위의 위치정보 받아오는 함수 선언
+
   const [query, setQuery] = useState("");
   const [predictions, setPredictions] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
+
+  const [checkText_press, setCheckText_press] = useState(false);
+  const [db_lat, setDb_lat] = useState(null);
+  const [db_lng, setDb_lng] = useState(null);
 
   const handleQueryChange = async (value) => {
     setQuery(value);
@@ -86,8 +93,10 @@ const AddParty = (props) => {
       setPredictions([]);
     }
   };
+
   const handlePredictionPress = async (prediction) => {
     setSelectedPlace(prediction);
+
     try {
       const placeDetailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction.place_id}&key=${API_KEY}`;
       const placeDetailsResponse = await fetch(placeDetailsUrl);
@@ -97,12 +106,16 @@ const AddParty = (props) => {
       const lat = result.geometry.location.lat;
       const lng = result.geometry.location.lng;
 
-      setQuery(`${result.formatted_address}${result.name}`);
+      setQuery(`${result.formatted_address}`);
       setSelectedPlace({ ...prediction, lat, lng });
+      setCheckText_press(true);
+      setDb_lat(lat);
+      setDb_lng(lng);
     } catch (error) {
       console.log(error);
     }
   };
+
   const getMapViewRegion = () => {
     if (selectedPlace && selectedPlace.lat && selectedPlace.lng) {
       return {
@@ -114,15 +127,28 @@ const AddParty = (props) => {
     }
     return defaultRegion;
   };
+
+  const saveLocation = async (latitude, longitude) => {
+    const docRef = await addDoc(collection(db, "party"), {
+      latitude: latitude,
+      longitude: longitude,
+    });
+    console.log("위도와 경도가 저장되었습니다. 문서 ID:", docRef.id);
+  };
+
   return (
     <View style={styles.container}>
       {/* 장소 검색 뷰, styles1 */}
       <View style={styles1.searchView}>
         <TextInput
+          clearButtonMode="always"
           style={styles1.textInputStyle}
           placeholder="장소를 검색해주세요."
           placeholderTextColor={"blue"}
           returnKeyType="next"
+          value={query}
+          onChangeText={handleQueryChange}
+          onSubmitEditing={() => handlePredictionPress(predictions[0])}
         ></TextInput>
       </View>
       {/* 지도 뷰, styles2 */}
@@ -145,8 +171,29 @@ const AddParty = (props) => {
             />
           )}
         </MapView>
-        <View style={{ ...styles1.overlayView, display: "none" }}>
-          <ScrollView style={{ backgroundColor: "black" }}></ScrollView>
+        <View
+          style={query != "" ? styles1.overlayView : styles1.inVisibleDisplay}
+        >
+          <ScrollView>
+            {predictions.map((prediction) => (
+              <View
+                style={{
+                  borderWidth: 0.2,
+                  padding: 5,
+                  borderRadius: 10,
+                  borderColor: "gray",
+                }}
+              >
+                <Text
+                  key={prediction.place_id}
+                  style={styles.predictionText}
+                  onPress={() => handlePredictionPress(prediction)}
+                >
+                  {prediction.description}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
       </View>
       {/* 다음 버튼 뷰, styles3 */}
@@ -155,6 +202,8 @@ const AddParty = (props) => {
           style={styles3.ToStyle}
           onPress={() => {
             props.navigation.navigate("파티 설정하기");
+            saveLocation(db_lat, db_lng);
+            console.log(db_lat);
           }}
         >
           <Text style={styles3.ToTextStyle}>다음</Text>
@@ -202,6 +251,9 @@ const styles1 = StyleSheet.create({
     padding: 10,
     height: 150,
     borderRadius: 10,
+  },
+  inVisibleDisplay: {
+    display: "none",
   },
 });
 

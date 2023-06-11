@@ -7,7 +7,13 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import React from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 
 const Auth = (props) => {
   const [email, setEmail] = React.useState("");
@@ -61,8 +67,21 @@ const Auth = (props) => {
           value={password}
           onChangeText={setPassword}
         />
-        <Button title="로그인" onPress={signIn} />
-        <Button title="회원가입" onPress={signUp} />
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity onPress={signIn} style={styles.btnStyle}>
+            <Text style={styles.fontStyle}>로그인</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={signUp} style={styles.btnStyle}>
+            <Text style={styles.fontStyle}>회원가입</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -88,6 +107,20 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,
+  },
+  btnStyle: {
+    justifyContent: "center",
+    backgroundColor: "#8000FF",
+    borderRadius: 20,
+    width: 100,
+    height: 40,
+    marginVertical: 20,
+    margin: 10,
+  },
+  fontStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 
 const MainScreen = () => {
   return (
-    <Tab.Navigator initialRouteName="Location">
+    <Tab.Navigator initialRouteName="지도">
       <Tab.Screen
         name="현재 파티"
         component={CurrentParty}

@@ -2,7 +2,7 @@ import { StyleSheet, Image } from "react-native";
 import MainScreen from "./components/MainScreen";
 import AddParty from "./components/AddParty";
 import Settings from "./components/AfterUser/Settings";
-import Auth from "./components/Auth";
+import SignIn from "./components/SignIn";
 import AppPolicy from "./components/AfterUser/AppPolicy";
 import AppGuide from "./components/AfterUser/AppGuide";
 import PartyLog from "./components/AfterUser/PartyLog";
@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 {
-  /*  initialRouteName="Loginpage" */
+  /*  <Stack.Navigator initialRouteName="로그인"> */
 }
 
 export default function App() {
@@ -35,7 +35,7 @@ export default function App() {
         />
         <Stack.Screen name="파티 생성하기" component={AddParty} />
         <Stack.Screen name="환경설정" component={Settings} />
-        <Stack.Screen name="Loginpage" component={Auth} />
+        <Stack.Screen name="로그인" component={SignIn} />
         <Stack.Screen name="약관 및 정책" component={AppPolicy} />
         <Stack.Screen name="가이드라인" component={AppGuide} />
         <Stack.Screen name="파티 참여내역" component={PartyLog} />

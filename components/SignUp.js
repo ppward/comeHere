@@ -8,16 +8,27 @@ import {
 } from "react-native";
 import * as EmailValidator from "email-validator";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import {
+  query,
+  where,
+  getDocs,
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
 
-export default function SignUp() {
+export default function SignUp(props) {
   const [email, setEmail] = React.useState("");
+  const [nickname, setNickname] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirm, setpasswordConfirm] = React.useState("");
   const [age, setAge] = React.useState("");
   const [gender, setGender] = React.useState("");
 
   const [emailError, setEmailError] = React.useState("");
+  const [nicknameError, setNicknameError] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
   const [confirmError, setConfirmError] = React.useState("");
   const [ageError, setAgeError] = React.useState("");
@@ -31,6 +42,16 @@ export default function SignUp() {
       setEmailError("");
       return true;
     }
+  };
+
+  const validateNickname = () => {
+    if (nickname === "") {
+      setNicknameError("닉네임을 입력하지 않았습니다");
+      return false;
+    } else {
+      setNicknameError("");
+    }
+    return true;
   };
 
   const validatePassword = () => {
@@ -113,13 +134,39 @@ export default function SignUp() {
       return true;
     }
   };
-  const signUp = async () => {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    console.log(result);
-  };
+  // const signUp = async () => {
+  //   const result = await createUserWithEmailAndPassword(auth, email, password);
+  //   console.log(result);
+  // };
+  const handleLogin = async () => {
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
+      if (user) {
+        const { uid, email } = user;
+
+        const userRef = collection(db, "users");
+        const q = query(userRef, where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          await addDoc(userRef, { uid, email, nickname, age, gender });
+          console.log("User information saved to Firestore");
+        } else {
+          console.log("User document already exists in Firestore");
+        }
+      }
+    } catch (error) {
+      console.error("Error logging in and saving user information:", error);
+    }
+  };
   const pressDone = () => {
     const checkEmail = validateEmail();
+    const checkNivkname = validateNickname();
     const checkPassword = validatePassword();
     const checkConfirm = validateConfirm();
     const checkAge = validateAge();
@@ -127,12 +174,15 @@ export default function SignUp() {
 
     if (
       checkEmail &&
+      checkNivkname &&
       checkPassword &&
       checkConfirm &&
       checkAge &&
       checkGender === true
     ) {
-      signUp();
+      alert("회원가입이 완료되었습니다");
+      props.navigation.navigate("지도");
+      handleLogin();
     }
   };
 
@@ -141,6 +191,19 @@ export default function SignUp() {
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 25, fontWeight: "bold" }}>회원가입</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="nickname"
+        placeholderTextColor="#c1c1c1"
+        maxLength={12}
+        value={nickname}
+        onChangeText={setNickname}
+      />
+      {nicknameError ? (
+        <Text style={nicknameError ? styles.errorText : styles.checkText}>
+          {nicknameError}
+        </Text>
+      ) : null}
       <TextInput
         style={styles.input}
         placeholder="email"
@@ -154,6 +217,7 @@ export default function SignUp() {
           {emailError}
         </Text>
       ) : null}
+
       <TextInput
         style={styles.input}
         placeholder="password"
