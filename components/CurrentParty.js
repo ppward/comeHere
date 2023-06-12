@@ -15,31 +15,21 @@ const city = "지역명";
 const curCount = "0";
 const maxCount = "30";
 const headCount = `${curCount}/${maxCount}`;
+const Separator = () => <View style={styles.separator} />;
 
 const Description = () => {
   const [partyDesc, setPartyDesc] = useState("party description", []);
-  return (
-    <Text
-      style={{
-        marginLeft: 10,
-        marginTop: 10,
-        marginRight: 10,
-      }}
-    >
-      {partyDesc}
-    </Text>
-  );
+  return partyDesc;
 };
 
-const CurrentParty = () => {
+const CurrentParty = ({ isCompetition, isRegularTerm }) => {
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <ScrollView style={{ flex: 1 }}>
+    <View>
+      <ScrollView style={styles.container}>
         {/* 카테고리, 위치, 인원수, 경쟁, 정기 확인 뷰, styles1 */}
-        <View>
+        <View style={styles1.container}>
           {/* 카테고리, 위치, 인원수 뷰 */}
-          <View style={{ ...styles1.container, marginTop: 20 }}>
+          <View style={styles1.settingView}>
             {/* 카테고리 */}
             <View style={styles1.infoView}>
               <Image style={styles.icon} source={Icons.BASEBALL} />
@@ -55,76 +45,82 @@ const CurrentParty = () => {
             </View>
           </View>
           {/* 경쟁, 정기 여부 확인 뷰 */}
-          <View style={styles1.container}>
+          <View style={styles1.settingView}>
             {/* 경쟁 가능 여부 */}
-            <View style={styles1.infoActiveView}>
-              <Text style={styles1.infoActiveText}>경쟁</Text>
+            <View
+              style={isCompetition ? styles1.infoActiveView : styles1.infoView}
+            >
+              <Text
+                style={
+                  isCompetition ? styles1.infoActiveText : styles1.infoText
+                }
+              >
+                경쟁
+              </Text>
             </View>
             {/* 정기 모임 여부 */}
-            <View style={styles1.infoActiveView}>
-              <Text style={styles1.infoActiveText}>정기</Text>
+            <View
+              style={isRegularTerm ? styles1.infoActiveView : styles1.infoView}
+            >
+              <Text
+                style={
+                  isRegularTerm ? styles1.infoActiveText : styles1.infoText
+                }
+              >
+                정기
+              </Text>
             </View>
           </View>
         </View>
+        <Separator />
 
-        {/* 2번째 뷰, styles2 */}
-        <View style={styles2.partyDescription}>
+        {/* 카테고리 아이콘, 제목, 파티 설명 뷰, styles2 */}
+        <View style={styles2.container}>
           {/* 파티 아이콘/제목 뷰 */}
-          <View style={styles.flexDirectionRow}>
-            <Image style={styles.icon} source={Icons.BASEBALL} />
-            <Button title="파티제목" onPress={() => {}} />
+          <View style={styles2.titleView}>
+            <View style={styles2.iconView}>
+              <Image style={styles.icon} source={Icons.BASEBALL} />
+            </View>
+            <Text style={styles2.titleText}>파티제목</Text>
           </View>
-          {/* 파티 설명 뷰, 바깥 뷰는 border 목적 */}
-          <View>
-            <View style={{ paddingBottom: 150 }}>
+          {/* 파티 설명 뷰 */}
+          <View style={styles2.descriptionView}>
+            <Text>
               <Description />
+            </Text>
+          </View>
+        </View>
+        <Separator />
+
+        {/* 장소, 일정 뷰, styles3 */}
+        <View style={styles3.container}>
+          {/* 날짜, 요일 */}
+          <View style={styles3.calenderView}>
+            <Text style={styles3.calenderText}>수요일</Text>
+            <Text style={{ ...styles3.calenderText, fontSize: 30 }}>14</Text>
+          </View>
+          {/* 상세 일정 및 장소 */}
+          <View>
+            <View style={styles3.infoView}>
+              <Image style={styles3.icon} source={Icons.CALENDAR} />
+              <Text style={styles3.infoText}>6월 14일 (수) 20:00</Text>
+            </View>
+            <View style={styles3.infoView}>
+              <Image style={styles3.icon} source={Icons.LOCATION} />
+              <Text style={styles3.infoText}>선문대학교 공학관</Text>
             </View>
           </View>
         </View>
-        {/* 3번째 뷰, styles3 */}
-        <View style={styles3.partyInfo}>
-          {/* 파티 장소 및 설명 뷰 */}
-          <View>
-            <View style={styles.flexRowAndAlignCenter}>
-              <Image
-                style={{ width: 25, height: 25 }}
-                source={Icons.ASTERISK}
-              />
-              <Button title="파티장소:" />
-            </View>
-            <View style={styles.flexRowAndAlignCenter}>
-              <Image style={styles.icon} source={Icons.LOCATION} />
-              <Button title="설명" />
-            </View>
-          </View>
-          {/* 파티 일정 및 설명 뷰 */}
-          <View>
-            <View style={styles.flexRowAndAlignCenter}>
-              <Image
-                style={{ width: 25, height: 25 }}
-                source={Icons.ASTERISK}
-              />
-              <Button title="파티일정:" />
-            </View>
-            <View style={styles.flexRowAndAlignCenter}>
-              <Image style={styles.icon} source={Icons.CALENDAR} />
-              <Button title="설명" />
-            </View>
-          </View>
-        </View>
-        {/* 4번째 뷰, styles4 */}
-        <View style={styles4.partyConfig}>
-          {/* 대화방 */}
-          <TouchableOpacity
-            onPress={() => {
-              // props.navigation.navigate("DescribeParty");
-            }}
-            style={{ ...styles4.chatBtn }}
-          >
+        <Separator />
+
+        {/* 대화방, 탈퇴, 삭제/수정 뷰, styles4 */}
+        <View style={styles4.container}>
+          {/* 대화방 입장 */}
+          <TouchableOpacity onPress={{}} style={styles4.chatBtn}>
             <View style={styles4.chatView}>
               <View>
                 <Image
-                  style={{ ...styles.icon, tintColor: "white" }}
+                  style={{ ...styles.icon, tintColor: "#E6E6E6" }}
                   source={Icons.CHAT}
                 />
               </View>
@@ -134,13 +130,11 @@ const CurrentParty = () => {
             </View>
           </TouchableOpacity>
           {/* 삭제, 수정, 탈퇴 */}
-          <View style={styles4.partyRelated}>
+          <View style={styles4.partyView}>
             {/* 파티 탈퇴 */}
             <View style={styles4.partyExit}>
               <TouchableOpacity
-                onPress={() => {
-                  // props.navigation.navigate("DescribeParty");
-                }}
+                onPress={() => {}}
                 style={{ ...styles4.partyBtn, backgroundColor: "#F2F2F2" }}
               >
                 <Text style={{ ...styles4.fontStyle, color: "#A4A4A4" }}>
@@ -187,9 +181,8 @@ const CurrentParty = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "#fffafa",
-    fontColor: "black",
+    padding: 10,
   },
   flexDirectionRow: {
     flexDirection: "row",
@@ -202,10 +195,22 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
+  separator: {
+    marginVertical: 8,
+    borderBottomColor: "#737373",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
 });
 
 const styles1 = StyleSheet.create({
   container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "white",
+    borderWidth: 0.4,
+    borderRadius: 5,
+  },
+  settingView: {
     flexDirection: "row",
     justifyContent: "space-around",
     flex: 1,
@@ -223,26 +228,6 @@ const styles1 = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#F8EFFB",
   },
-  locationIcon: {
-    width: 25,
-    height: 25,
-    margin: 5,
-    tintColor: "#8000FF",
-  },
-  locationText: {
-    fontSize: 20,
-    fontWeight: "500",
-    margin: 5,
-  },
-  peopleText: {
-    fontSize: 17,
-  },
-  compText: {
-    fontSize: 17,
-  },
-  termText: {
-    fontSize: 17,
-  },
   infoActiveView: {
     flex: 1,
     margin: 5,
@@ -256,45 +241,147 @@ const styles1 = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#5858FA",
   },
+  infoText: {
+    fontSize: 17,
+    fontWeight: "600",
+  },
   infoActiveText: {
     color: "white",
     fontSize: 17,
+    fontWeight: "600",
+  },
+  locationIcon: {
+    width: 25,
+    height: 25,
+    margin: 5,
+    tintColor: "#8000FF",
+  },
+  locationText: {
+    fontSize: 20,
+    fontWeight: "500",
+    margin: 5,
+  },
+  peopleText: {
+    fontSize: 17,
+    fontWeight: "600",
   },
 });
 
 const styles2 = StyleSheet.create({
-  partyDescription: {
+  container: {
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "white",
-    marginVertical: 10,
-    marginHorizontal: 20,
-    padding: 15,
-    alignItems: "flex-start",
+    padding: 10,
+    borderWidth: 0.4,
+    borderRadius: 5,
+    flex: 3,
+  },
+  iconView: {
+    borderWidth: 0.2,
+    borderRadius: 10,
+    padding: 5,
+  },
+  titleView: {
+    padding: 5,
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  titleText: {
+    padding: 10,
+    fontSize: 20,
+    marginLeft: 10,
+    width: "87%",
+    borderWidth: 0.2,
+    borderRadius: 5,
+  },
+  descriptionView: {
+    flex: 2,
+    height: 200,
+    width: "100%",
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "lightgray",
+  },
+  descriptionText: {
+    marginLeft: 10,
+    marginTop: 10,
+    marginRight: 10,
   },
 });
 
 const styles3 = StyleSheet.create({
-  partyInfo: {
+  container: {
+    padding: 10,
+    borderWidth: 0.4,
+    borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "white",
-    marginLeft: 15,
-    alignItems: "flex-start",
-    marginVertical: 10,
-    marginHorizontal: 20,
-    padding: 15,
+  },
+  calenderView: {
+    borderWidth: 0.2,
+    borderRadius: 15,
+    height: 75,
+    width: 75,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 10,
+  },
+  calenderText: {
+    fontWeight: "800",
+    fontSize: 15,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
+  },
+  infoView: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 5,
+  },
+  infoText: {
+    width: "75%",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 
 const styles4 = StyleSheet.create({
-  partyConfig: {
+  container: {
     backgroundColor: "white",
+    padding: 10,
     alignItems: "center",
-    marginVertical: 10,
+    borderWidth: 0.4,
+    borderRadius: 5,
     marginBottom: 20,
-    marginHorizontal: 20,
-    paddingTop: 15,
-    paddingBottom: 15,
+  },
+  chatView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "85%",
+  },
+  chatBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#5858FA",
+    borderRadius: 20,
+    width: 150,
+    height: 50,
+    marginBottom: 15,
+  },
+  partyView: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
   },
   partyThing: {
-    // flexDirection: "row",
     width: 120,
     height: 100,
     alignItems: "center",
@@ -307,34 +394,14 @@ const styles4 = StyleSheet.create({
     borderRadius: 20,
     width: 100,
     height: 40,
-    // margin: 10,
   },
-  chatView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "85%",
-  },
-  chatBtn: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#8000FF",
-    borderRadius: 20,
-    width: 150,
-    height: 50,
-    marginVertical: 20,
-    margin: 10,
-  },
+
   fontStyle: {
-    fontWeight: "500",
-    color: "white",
+    fontWeight: "700",
     fontSize: 16,
+    color: "#E6E6E6",
   },
-  partyRelated: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
-  },
+
   partyExit: {
     alignItems: "flex-end",
     justifyContent: "space-around",

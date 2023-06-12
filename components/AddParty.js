@@ -66,7 +66,7 @@ const AddParty = (props) => {
   const [query, setQuery] = useState("");
   const [predictions, setPredictions] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
-
+  const [adress,setAdress] = useState("");
   const [checkText_press, setCheckText_press] = useState(false);
   const [db_lat, setDb_lat] = useState(null);
   const [db_lng, setDb_lng] = useState(null);
@@ -103,6 +103,7 @@ const AddParty = (props) => {
       const lng = result.geometry.location.lng;
 
       setQuery(`${result.formatted_address}`);
+      setAdress(`${result.formatted_address}`);
       setSelectedPlace({ ...prediction, lat, lng });
       setCheckText_press(true);
       setDb_lat(lat);
@@ -126,11 +127,14 @@ const AddParty = (props) => {
 
   const [documentId, setDocumentId] = useState("");
 
-  const saveLocation = async (latitude, longitude) => {
+  const saveLocation = async (adress,latitude, longitude) => {
     try {
       const docRef = await addDoc(collection(db, "party"), {
-        latitude: latitude,
-        longitude: longitude,
+        adress: adress,
+        location:{
+          latitude: latitude,
+          longitude: longitude,
+        },
       });
 
       setDocumentId(docRef.id);
@@ -205,8 +209,8 @@ const AddParty = (props) => {
         <TouchableOpacity
           style={styles3.ToStyle}
           onPress={() => {
-            // saveLocation(db_lat,db_lng)
-            props.navigation.navigate("파티 설정하기");
+           saveLocation(adress,db_lat,db_lng)
+            
           }}
         >
           <Text style={styles3.ToTextStyle}>다음</Text>
