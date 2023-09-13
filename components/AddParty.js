@@ -23,16 +23,16 @@ const setUserLocation = (lat, long) => {
     userLocation: {
       latitude: lat, //props의 위도저장
       longitude: long, // props의 경도저장
-      latitudeDelta: 0.004, //맵의 dgree? 를 표시하는 값이라는데...
-      longitudeDelta: 0.004,
+      latitudeDelta: 0.025, //맵의 dgree? 를 표시하는 값이라는데...
+      longitudeDelta: 0.025,
     },
   };
 };
 const defaultRegion = {
   latitude: 36.7997761,
   longitude: 127.0748502,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
+  latitudeDelta: 0.025,
+  longitudeDelta: 0.025,
 };
 const GetLocation = () => {
   // 사용자의 현재위치를 받아오는 함수
@@ -66,7 +66,7 @@ const AddParty = (props) => {
   const [query, setQuery] = useState("");
   const [predictions, setPredictions] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [adress,setAdress] = useState("");
+  const [adress, setAdress] = useState("");
   const [checkText_press, setCheckText_press] = useState(false);
   const [db_lat, setDb_lat] = useState(null);
   const [db_lng, setDb_lng] = useState(null);
@@ -127,11 +127,11 @@ const AddParty = (props) => {
 
   const [documentId, setDocumentId] = useState("");
 
-  const saveLocation = async (adress,latitude, longitude) => {
+  const saveLocation = async (adress, latitude, longitude) => {
     try {
       const docRef = await addDoc(collection(db, "party"), {
         adress: adress,
-        location:{
+        location: {
           latitude: latitude,
           longitude: longitude,
         },
@@ -209,8 +209,7 @@ const AddParty = (props) => {
         <TouchableOpacity
           style={styles3.ToStyle}
           onPress={() => {
-           saveLocation(adress,db_lat,db_lng)
-            
+            saveLocation(adress, db_lat, db_lng);
           }}
         >
           <Text style={styles3.ToTextStyle}>다음</Text>

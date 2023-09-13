@@ -11,14 +11,18 @@ import {
 import Icons from "assets";
 import { useState } from "react";
 
-const city = "지역명";
-const curCount = "0";
-const maxCount = "30";
+const city = "탕정면";
+const curCount = "1";
+const maxCount = "4";
 const headCount = `${curCount}/${maxCount}`;
 const Separator = () => <View style={styles.separator} />;
 
 const Description = () => {
-  const [partyDesc, setPartyDesc] = useState("party description", []);
+  const stringbad = "4명이서 2대2로 배드민턴 치실 분 구합니다";
+  const [partyDesc, setPartyDesc] = useState(stringbad, []);
+  handleDesc = () => {
+    setPartyDesc("4명이서 2대2로 배드민턴 치실 분 구합니다");
+  };
   return partyDesc;
 };
 
@@ -32,7 +36,7 @@ const CurrentParty = ({ isCompetition, isRegularTerm }) => {
           <View style={styles1.settingView}>
             {/* 카테고리 */}
             <View style={styles1.infoView}>
-              <Image style={styles.icon} source={Icons.BASEBALL} />
+              <Image style={styles.icon} source={Icons.SPORTS} />
             </View>
             {/* 위치 */}
             <View style={styles1.infoView}>
@@ -48,11 +52,11 @@ const CurrentParty = ({ isCompetition, isRegularTerm }) => {
           <View style={styles1.settingView}>
             {/* 경쟁 가능 여부 */}
             <View
-              style={isCompetition ? styles1.infoActiveView : styles1.infoView}
+              style={isCompetition ? styles1.infoView : styles1.infoActiveView}
             >
               <Text
                 style={
-                  isCompetition ? styles1.infoActiveText : styles1.infoText
+                  isCompetition ? styles1.infoText : styles1.infoActiveText
                 }
               >
                 경쟁
@@ -79,9 +83,9 @@ const CurrentParty = ({ isCompetition, isRegularTerm }) => {
           {/* 파티 아이콘/제목 뷰 */}
           <View style={styles2.titleView}>
             <View style={styles2.iconView}>
-              <Image style={styles.icon} source={Icons.BASEBALL} />
+              <Image style={styles.icon} source={Icons.SPORTS} />
             </View>
-            <Text style={styles2.titleText}>파티제목</Text>
+            <Text style={styles2.titleText}>배드민턴 치실 분</Text>
           </View>
           {/* 파티 설명 뷰 */}
           <View style={styles2.descriptionView}>

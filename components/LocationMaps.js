@@ -4,8 +4,14 @@ import MapView from "react-native-maps"; //지도호출하는
 import { PROVIDER_GOOGLE, Marker } from "react-native-maps"; //구글 지도로 변환하는 PROVIDER
 import * as Location from "expo-location";
 import Icons from "assets";
-import { doc, updateDoc, getDoc,getDocs ,collection,} from 'firebase/firestore';
-import {db} from '../firebase'
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  getDocs,
+  collection,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 const setUserLocation = (lat, long) => {
   //사용자의 위치를 저장(json 키로 변경하는 함수)
@@ -13,8 +19,8 @@ const setUserLocation = (lat, long) => {
     userLocation: {
       latitude: lat, //props의 위도저장
       longitude: long, // props의 경도저장
-      latitudeDelta: 0.004, //맵의 dgree? 를 표시하는 값이라는데...
-      longitudeDelta: 0.004,
+      latitudeDelta: 0.025, //맵의 dgree? 를 표시하는 값이라는데...
+      longitudeDelta: 0.025,
     },
   };
 };
@@ -55,9 +61,8 @@ const LocationMaps = (props) => {
   const [query, setQuery] = useState("");
   const [predictions, setPredictions] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  
-  const [data, setData] = useState([]); // 데이터 배열 상태
 
+  const [data, setData] = useState([]); // 데이터 배열 상태
 
   const [locations, setLocations] = useState([]); // location 데이터를 저장할 배열
 
@@ -67,7 +72,7 @@ const LocationMaps = (props) => {
 
   const fetchLocations = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'party')); // 가져올 컬렉션 경로 설정
+      const querySnapshot = await getDocs(collection(db, "party")); // 가져올 컬렉션 경로 설정
       const fetchedLocations = []; // 가져온 데이터를 임시로 저장할 배열
 
       querySnapshot.forEach((doc) => {
@@ -77,7 +82,7 @@ const LocationMaps = (props) => {
 
       setLocations(fetchedLocations); // useState를 사용하여 배열에 데이터 저장
     } catch (error) {
-      console.error('Error fetching locations: ', error);
+      console.error("Error fetching locations: ", error);
     }
   };
   const handleQueryChange = async (value) => {
@@ -136,7 +141,6 @@ const LocationMaps = (props) => {
         onUserLocationChange={setUserLocation(locate[0], locate[1])}
         showsUserLocation={true}
       >
-
         {selectedPlace && selectedPlace.lat && selectedPlace.lng && (
           <Marker
             coordinate={{
@@ -146,11 +150,13 @@ const LocationMaps = (props) => {
             title={selectedPlace.description}
           />
         )}
-       {locations.map((location, index) => (
+        {locations.map((location, index) => (
           <Marker
             key={index}
-            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-            
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
           />
         ))}
       </MapView>

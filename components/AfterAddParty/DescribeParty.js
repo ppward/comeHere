@@ -12,86 +12,83 @@ import {
   Alert,
 } from "react-native";
 import Icons from "assets";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { useRoute } from '@react-navigation/native';
-import { doc, updateDoc, getDoc ,collection,} from 'firebase/firestore';
-import {db} from '../../firebase'
-
+import { useRoute } from "@react-navigation/native";
+import { doc, updateDoc, getDoc, collection } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const Separator = () => <View style={styles.separator} />;
 
-
 const DescribeParty = (props) => {
-  const route =useRoute();
-  const documentId = route.params?.documentId
-  const [describe,setDescribe]=useState("");
-  const[db_url,setDb_url] =useState("");
+  const route = useRoute();
+  const documentId = route.params?.documentId;
+  const [describe, setDescribe] = useState("");
+  const [db_url, setDb_url] = useState("");
   const [data, setData] = useState([]);
-  const [userCategory,setUserCategory]=useState("");
-  const [icon,setIcon] =useState("");
-  
+  const [userCategory, setUserCategory] = useState("");
+  const [icon, setIcon] = useState("");
+
   useEffect(() => {
     const fetchDocument = async () => {
       try {
-        const docRef = doc(db, 'party', documentId);
+        const docRef = doc(db, "party", documentId);
         const docSnap = await getDoc(docRef);
-  
+
         if (docSnap.exists()) {
           const documentData = docSnap.data();
-          setData(documentData)
+          setData(documentData);
           // 문서 데이터 처리
-          console.log(documentData)
-          const icon = checkCategory(data.category)
-          setIcon(icon)
+          console.log(documentData);
+          const icon = checkCategory(data.category);
+          setIcon(icon);
         } else {
-          console.log('Document not found');
+          console.log("Document not found");
         }
       } catch (error) {
-        console.error('Error fetching document: ', error);
+        console.error("Error fetching document: ", error);
       }
     };
-  
+
     fetchDocument();
-    
   }, [documentId]);
 
-  const checkCategory=(category)=>{
-    if(category=="outdoor"){
-     setUserCategory("아웃도어/여행")
-     return Icons.OUTDOOR
-    }else if(category=="sports"){
-      setUserCategory("운동/스포츠")
-      return Icons.SPORTS
-    }else if(category=="culture"){
-      setUserCategory("문화/공연/축제")
-      return Icons.CULTURE
-    }else if(category=="volunteer"){
-      setUserCategory("봉사활동")
-      return Icons.VOLUNTEER
-    }else if(category=="photo"){
-      setUserCategory("사진/영상")
-      return Icons.PHOTO
-    }else if(category=="game"){
-      setUserCategory("게임/오락")
-      return Icons.GAME
-    }else if(category=="cooking"){
-      setUserCategory("요리/제조")
-      return Icons.COOKING
-    }else if(category=="adult"){
-      setUserCategory("유흥")
-      return Icons.ADULT
-    }else if(category=="etc"){
-      setUserCategory("기타")
-      return Icons.ETC
-    }else{
-   
+  const checkCategory = (category) => {
+    if (category == "outdoor") {
+      setUserCategory("아웃도어/여행");
+      return Icons.OUTDOOR;
+    } else if (category == "sports") {
+      setUserCategory("운동/스포츠");
+      return Icons.SPORTS;
+    } else if (category == "culture") {
+      setUserCategory("문화/공연/축제");
+      return Icons.CULTURE;
+    } else if (category == "volunteer") {
+      setUserCategory("봉사활동");
+      return Icons.VOLUNTEER;
+    } else if (category == "photo") {
+      setUserCategory("사진/영상");
+      return Icons.PHOTO;
+    } else if (category == "game") {
+      setUserCategory("게임/오락");
+      return Icons.GAME;
+    } else if (category == "cooking") {
+      setUserCategory("요리/제조");
+      return Icons.COOKING;
+    } else if (category == "adult") {
+      setUserCategory("유흥");
+      return Icons.ADULT;
+    } else if (category == "etc") {
+      setUserCategory("기타");
+      return Icons.ETC;
+    } else {
     }
-   }
-   
-   const ImagePickerComponent = () => {
+  };
+
+  const ImagePickerComponent = () => {
     const [imageUrl, setImageUrl] = useState("");
-    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+    const [status, requestPermission] =
+      ImagePicker.useMediaLibraryPermissions();
     const uploadImage = async () => {
       if (!status?.granted) {
         const permission = await requestPermission();
@@ -109,7 +106,7 @@ const DescribeParty = (props) => {
         return null;
       }
       setImageUrl(result.uri);
-      setDb_url(result.uri)
+      setDb_url(result.uri);
     };
     return (
       <View style={styles2.imageInputView}>
@@ -125,20 +122,25 @@ const DescribeParty = (props) => {
           </Pressable>
         </View>
         {/* 첨부된 이미지 확인 뷰 */}
-        <View style={{ borderWidth: 0.5, borderRadius: 5, borderColor: "gray" }}>
-          <Image style={styles2.uploadedImage} source={{ uri: imageUrl }}></Image>
+        <View
+          style={{ borderWidth: 0.5, borderRadius: 5, borderColor: "gray" }}
+        >
+          <Image
+            style={styles2.uploadedImage}
+            source={{ uri: imageUrl }}
+          ></Image>
         </View>
       </View>
     );
   };
- 
+
   const saveDescribe = async (documentId, describe, uri) => {
-    await updateDoc(doc(db, 'party', documentId), {
-      describe:describe,
-      URI: uri
+    await updateDoc(doc(db, "party", documentId), {
+      describe: describe,
+      URI: uri,
     });
-  
-    console.log('세부사항이 저장되었습니다.');
+
+    console.log("세부사항이 저장되었습니다.");
     props.navigation.navigate("MainScreen");
   };
 
@@ -190,7 +192,7 @@ const DescribeParty = (props) => {
         <TouchableOpacity
           onPress={() => {
             Alert.alert("파티 등록이 완료되었습니다.");
-            saveDescribe(documentId,describe,db_url);
+            saveDescribe(documentId, describe, db_url);
             {
               /*
               alert 창 확인 버튼 누르고 메인 화면으로 옮기려 했으나
